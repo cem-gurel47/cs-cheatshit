@@ -47,7 +47,7 @@ const HeaderMobile = () => {
           </Link>
         </Grid>
         <Grid>
-          <Link href="/algorithms">
+          <Link href="/algorithms/binary-tree">
             <Text
               size={20}
               css={{
