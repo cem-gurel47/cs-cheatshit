@@ -2,6 +2,10 @@ import React from "react";
 import { useRouter } from "next/router";
 import { Grid, Text } from "@nextui-org/react";
 import Head from "next/head";
+import dynamic from "next/dynamic";
+const TextEditor = dynamic(import("@components/CodeEditor"), {
+  ssr: false,
+});
 
 type Props = {};
 
@@ -20,7 +24,11 @@ const Algorithm = (props: Props) => {
     return "";
   };
   return (
-    <div>
+    <Grid.Container
+      css={{
+        width: "100%",
+      }}
+    >
       <Head>
         <title>{`${
           algorithm || ""
@@ -30,11 +38,13 @@ const Algorithm = (props: Props) => {
       <Grid
         css={{
           mt: "-$8",
+          width: "100%",
         }}
       >
         <Text h1>{convertPathToTitle(algorithm)}</Text>
+        <TextEditor code="function test(){}" />
       </Grid>
-    </div>
+    </Grid.Container>
   );
 };
 

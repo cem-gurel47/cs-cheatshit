@@ -4,6 +4,7 @@ import CollapseSidebar from "./Collapse";
 import { ImTree } from "react-icons/im";
 import { BiSearchAlt } from "react-icons/bi";
 import { BsSortNumericDownAlt } from "react-icons/bs";
+import { GrGraphQl } from "react-icons/gr";
 type Props = {};
 
 const data = [
@@ -30,6 +31,11 @@ const data = [
     title: "Search Algorithms",
     Icon: BiSearchAlt,
   },
+  {
+    title: "Graph Algorithms",
+    items: ["Dijkstra's Algorithm", "Bellman-Ford Algorithm"],
+    Icon: GrGraphQl,
+  },
 ];
 
 const Sidebar = (props: Props) => {
@@ -39,6 +45,7 @@ const Sidebar = (props: Props) => {
       css={{
         width: "100%",
         mt: "-$2",
+        display: "block",
       }}
     >
       <Input
@@ -48,14 +55,26 @@ const Sidebar = (props: Props) => {
         clearable
         fullWidth
       />
-      {data.map((item) => (
-        <CollapseSidebar
-          key={item.title}
-          title={item.title}
-          Icon={item.Icon}
-          items={item.items}
-        />
-      ))}
+      {data.map((item) => {
+        const { title, items, Icon } = item;
+        const filteredItems = items.filter((item) =>
+          item.toLowerCase().includes(search.toLowerCase())
+        );
+        const filteredTitle = title
+          .toLowerCase()
+          .includes(search.toLowerCase());
+        if (filteredItems.length > 0 || filteredTitle) {
+          return (
+            <CollapseSidebar
+              key={title}
+              title={title}
+              Icon={Icon}
+              items={filteredItems}
+            />
+          );
+        }
+        return null;
+      })}
     </Grid.Container>
   );
 };
