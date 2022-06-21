@@ -25,7 +25,7 @@ const CircularDiv = ({ color }: { color: string }) => {
 };
 
 const AlgorithmCard = ({ code }: Props) => {
-  const [mode, setMode] = useState<Set<string>>(new Set(["code"]));
+  const [mode, setMode] = useState<Set<string>>(new Set(["visual"]));
   return (
     <Grid.Container
       css={{

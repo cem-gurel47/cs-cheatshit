@@ -15,6 +15,7 @@
     "next-themes": "^0.2.0",
     "react": "18.2.0",
     "react-ace": "^10.1.0",
+    "react-anime": "^4.1.1",
     "react-dom": "18.2.0",
     "react-iconly": "^2.2.5",
     "react-icons": "^4.4.0"
