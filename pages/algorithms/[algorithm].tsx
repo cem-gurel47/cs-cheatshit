@@ -2,15 +2,13 @@ import React from "react";
 import { useRouter } from "next/router";
 import { Grid, Text } from "@nextui-org/react";
 import Head from "next/head";
-import dynamic from "next/dynamic";
-const TextEditor = dynamic(import("@components/CodeEditor"), {
-  ssr: false,
-});
+import AlgorithmCard from "@components/Card/algorithm";
 
 type Props = {};
 
 const Algorithm = (props: Props) => {
   const router = useRouter();
+
   const { algorithm } = router.query;
 
   const convertPathToTitle = (path: string | string[] | undefined) => {
@@ -41,8 +39,19 @@ const Algorithm = (props: Props) => {
           width: "100%",
         }}
       >
-        <Text h1>{convertPathToTitle(algorithm)}</Text>
-        <TextEditor code="function test(){}" />
+        <Text
+          h1
+          css={{
+            mt: "$4",
+          }}
+        >
+          {convertPathToTitle(algorithm)}
+        </Text>
+        <AlgorithmCard
+          code={`function test(){
+            console.log("Hello World");
+          }`}
+        />
       </Grid>
     </Grid.Container>
   );
