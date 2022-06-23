@@ -1,5 +1,5 @@
 import React from "react";
-import { Node } from "./tree";
+import { BTNode } from "./tree";
 import { Grid } from "@nextui-org/react";
 import dynamic from "next/dynamic";
 const Anime = dynamic(import("react-anime"), {
@@ -7,7 +7,7 @@ const Anime = dynamic(import("react-anime"), {
 });
 
 type Props = {
-  item: Node;
+  item: BTNode;
 };
 
 const NodeItem = ({ item }: Props) => {
@@ -38,6 +38,27 @@ const NodeItem = ({ item }: Props) => {
           {item.value}
         </Grid>
       </Anime>
+      {item.left && (
+        <Grid
+          css={{
+            transform: "rotate(-45deg)",
+            height: "1px",
+            width: "30px",
+            backgroundColor: "#fff",
+          }}
+        />
+      )}
+      {item.right && (
+        <Grid
+          css={{
+            transform: "rotate(45deg)",
+            height: "1px",
+            width: "30px",
+            ml: "2rem",
+            backgroundColor: "#fff",
+          }}
+        />
+      )}
     </li>
   );
 };

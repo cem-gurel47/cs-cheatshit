@@ -6,6 +6,7 @@ import Node from "./Node";
 type Props = {};
 
 const AlgorithmVisual = (props: Props) => {
+  const [scale, setScale] = useState(1);
   // TODO since I'm not using setBST, I can store it using useRef
   const [BST, setBST] = useState<typeof BinarySearchTree>(
     new BinarySearchTree()
@@ -17,10 +18,6 @@ const AlgorithmVisual = (props: Props) => {
     if (value) {
       setValue("");
       BST.insert(Number(value));
-      const depth = BST.calculateDepth(BST.root);
-      for (let i = 0; i < depth; i++) {
-        console.log(BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1));
-      }
     }
   };
 
@@ -31,17 +28,60 @@ const AlgorithmVisual = (props: Props) => {
     }
   };
 
+  const zoomGrid = () => {
+    if (scale < 1) {
+      setScale((scale) => scale + 0.1);
+    }
+  };
+
+  const unzoomGrid = () => {
+    setScale((scale) => scale - 0.1);
+  };
+
+  console.log(scale);
+
   return (
     <Grid.Container
       direction="column"
       css={{
-        width: "calc(100% - 5rem)",
+        position: "relative",
+        width: "100%",
         height: "60vh",
         pl: "$8",
         pr: "$8",
       }}
     >
-      <Grid>
+      <Button
+        auto
+        flat
+        css={{
+          position: "absolute",
+          right: "$8",
+          bottom: "60px",
+          zIndex: "1",
+        }}
+        onClick={zoomGrid}
+      >
+        +
+      </Button>
+      <Button
+        auto
+        flat
+        css={{
+          position: "absolute",
+          right: "$8",
+          bottom: "10px",
+          zIndex: "1",
+        }}
+        onClick={unzoomGrid}
+      >
+        -
+      </Button>
+      <Grid
+        css={{
+          height: "100%",
+        }}
+      >
         <Grid.Container
           direction="row"
           alignItems="center"
@@ -51,7 +91,7 @@ const AlgorithmVisual = (props: Props) => {
         >
           <Grid>
             <Input
-              placeholder="Add node"
+              placeholder="Enter node"
               bordered
               type={"number"}
               color="primary"
@@ -86,7 +126,14 @@ const AlgorithmVisual = (props: Props) => {
             </Button>
           </Grid>
         </Grid.Container>
-        <Grid>
+        <Grid
+          css={{
+            height: "100%",
+            width: "100%",
+            scale,
+            cursor: "grab",
+          }}
+        >
           <ul>
             {new Array(BST.calculateDepth(BST.root)).fill(0).map((_, i) => (
               <Grid
@@ -95,14 +142,14 @@ const AlgorithmVisual = (props: Props) => {
                   display: "flex",
                   width: "100%",
                   pl: 10 / (i + 1),
-                  pr: 100 / (i + 1),
+                  pr: 10 / (i + 1),
                 }}
                 justify={i === 0 ? "center" : "space-between"}
                 alignItems="center"
               >
                 {BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1).map(
                   (item: typeof BTNode) => (
-                    <Node key={`${item.value}-${1}`} item={item} />
+                    <Node key={`${item.value}-${i + 1}`} item={item} />
                   )
                 )}
               </Grid>
