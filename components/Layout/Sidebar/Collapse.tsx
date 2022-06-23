@@ -1,5 +1,5 @@
 import React from "react";
-import { Collapse, Text, Link } from "@nextui-org/react";
+import { Collapse, Text, Link, Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { IconType } from "react-icons";
 
@@ -7,9 +7,10 @@ type Props = {
   title: string;
   Icon: IconType;
   items: string[];
+  comingSoon?: boolean;
 };
 
-const CollapseSidebar = ({ title, Icon, items }: Props) => {
+const CollapseSidebar = ({ title, Icon, items, comingSoon }: Props) => {
   const router = useRouter();
   const { algorithm } = router.query;
 
@@ -38,11 +39,36 @@ const CollapseSidebar = ({ title, Icon, items }: Props) => {
         {items.map((item) => {
           const path = generatePath(item);
           return (
-            <li key={item}>
-              <Link href={path}>
+            <li
+              key={item}
+              style={{
+                pointerEvents: comingSoon ? "none" : "auto",
+                cursor: comingSoon ? "no-drop" : "pointer",
+              }}
+            >
+              <Link
+                href={path}
+                css={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <Text color={isMenuItemActive(path) ? "$primary" : "$accents8"}>
                   {item}
                 </Text>
+                {comingSoon && (
+                  <Button
+                    disabled
+                    size="xs"
+                    as="span"
+                    css={{
+                      fontSize: "9px",
+                    }}
+                  >
+                    COMING SOON{" "}
+                  </Button>
+                )}
               </Link>
             </li>
           );

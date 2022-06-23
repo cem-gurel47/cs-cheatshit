@@ -23,17 +23,20 @@ const data = [
       "Heap Sort",
       "Radix Sort",
     ],
+    comingSoon: true,
     title: "Sorting Algorithms",
     Icon: BsSortNumericDownAlt,
   },
   {
     items: ["Binary Search", "Linear Search"],
+    comingSoon: true,
     title: "Search Algorithms",
     Icon: BiSearchAlt,
   },
   {
     title: "Graph Algorithms",
     items: ["Dijkstra's Algorithm", "Bellman-Ford Algorithm"],
+    comingSoon: true,
     Icon: GrGraphQl,
   },
 ];
@@ -56,7 +59,7 @@ const Sidebar = (props: Props) => {
         fullWidth
       />
       {data.map((item) => {
-        const { title, items, Icon } = item;
+        const { title, items, Icon, comingSoon } = item;
         const filteredItems = items.filter((item) =>
           item.toLowerCase().includes(search.toLowerCase())
         );
@@ -70,6 +73,7 @@ const Sidebar = (props: Props) => {
               title={title}
               Icon={Icon}
               items={filteredItems}
+              comingSoon={comingSoon}
             />
           );
         }

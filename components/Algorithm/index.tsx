@@ -1,41 +1,34 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Button, Grid, Input } from "@nextui-org/react";
-import dynamic from "next/dynamic";
-const Anime = dynamic(import("react-anime"), {
-  ssr: false,
-});
+const { BinarySearchTree, BTNode } = require("./tree");
+import Node from "./Node";
 
 type Props = {};
 
 const AlgorithmVisual = (props: Props) => {
-  const containerRef = useRef<HTMLUListElement>(null);
-  const [value, setValue] = useState<string>();
-  const [treeItems, setTreeItems] = useState<number[]>([]);
+  // TODO since I'm not using setBST, I can store it using useRef
+  const [BST, setBST] = useState<typeof BinarySearchTree>(
+    new BinarySearchTree()
+  );
+
+  const [value, setValue] = useState<string | undefined>();
 
   const addNode = () => {
     if (value) {
-      setTreeItems([...treeItems, Number(value)].sort((a, b) => a - b));
-      setValue(undefined);
+      setValue("");
+      BST.insert(Number(value));
+      const depth = BST.calculateDepth(BST.root);
+      for (let i = 0; i < depth; i++) {
+        console.log(BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1));
+      }
     }
   };
 
-  const returnNodeTranslateX = (node: number) => {
-    if (!containerRef.current) {
-      return 0;
+  const deleteNode = () => {
+    if (value) {
+      setValue("");
+      BST.remove(Number(value));
     }
-    if (treeItems[0] === node) {
-      return containerRef.current.getBoundingClientRect().width / 2;
-    }
-    const lastNode = containerRef.current.querySelector(
-        `.node[data-index="${treeItems[treeItems.length - 1]}"]`
-      ),
-      lastNodeRect = lastNode?.getBoundingClientRect();
-
-    console.log(lastNode);
-    if (!lastNodeRect) {
-      return 0;
-    }
-    return lastNodeRect.x + lastNodeRect.width / 2;
   };
 
   return (
@@ -49,7 +42,13 @@ const AlgorithmVisual = (props: Props) => {
       }}
     >
       <Grid>
-        <Grid.Container direction="row" alignItems="center" gap={1} as="form">
+        <Grid.Container
+          direction="row"
+          alignItems="center"
+          gap={1}
+          as="form"
+          onSubmit={() => false}
+        >
           <Grid>
             <Input
               placeholder="Add node"
@@ -73,43 +72,40 @@ const AlgorithmVisual = (props: Props) => {
               Add Node
             </Button>
           </Grid>
+          <Grid>
+            <Button
+              auto
+              color="error"
+              type="submit"
+              onClick={(e) => {
+                e?.preventDefault();
+                deleteNode();
+              }}
+            >
+              Delete Node
+            </Button>
+          </Grid>
         </Grid.Container>
         <Grid>
-          <ul ref={containerRef}>
-            {treeItems.map((item) => (
-              <li key={item}>
-                <Anime
-                  easing="easeOutElastic"
-                  duration={1000}
-                  delay={(_: any, i: number) => i * 100}
-                  scale={[0.5, 1]}
-                  opacity={[0, 1]}
-                  translateY={[
-                    -100,
-                    containerRef.current
-                      ? containerRef.current.getBoundingClientRect().height / 2
-                      : 0,
-                  ]}
-                  translateX={[-100, returnNodeTranslateX(item)]}
-                  loop={false}
-                >
-                  <Grid
-                    css={{
-                      backgroundColor: "$primary",
-                      width: "2.5rem",
-                      height: "2.5rem",
-                      borderRadius: "50%",
-                      margin: "0.5rem",
-                      display: "flex",
-                      border: "1px solid #fff",
-                    }}
-                    justify="center"
-                    alignItems="center"
-                  >
-                    {item}
-                  </Grid>
-                </Anime>
-              </li>
+          <ul>
+            {new Array(BST.calculateDepth(BST.root)).fill(0).map((_, i) => (
+              <Grid
+                key={i}
+                css={{
+                  display: "flex",
+                  width: "100%",
+                  pl: 10 / (i + 1),
+                  pr: 100 / (i + 1),
+                }}
+                justify={i === 0 ? "center" : "space-between"}
+                alignItems="center"
+              >
+                {BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1).map(
+                  (item: typeof BTNode) => (
+                    <Node key={`${item.value}-${1}`} item={item} />
+                  )
+                )}
+              </Grid>
             ))}
           </ul>
         </Grid>
