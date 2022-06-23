@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Button, Grid, Input } from "@nextui-org/react";
+import ZoomButton from "./ZoomButton";
 const { BinarySearchTree, BTNode } = require("./tree");
 import Node from "./Node";
+import DragganleGrid from "./DraggableGrid";
 
 type Props = {};
 
@@ -18,6 +20,12 @@ const AlgorithmVisual = (props: Props) => {
     if (value) {
       setValue("");
       BST.insert(Number(value));
+      // const depth = BST.calculateDepth(BST.root);
+      // for (let index = 0; index < depth; index++) {
+      //   console.log(
+      //     BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, index + 1)
+      //   );
+      // }
     }
   };
 
@@ -27,18 +35,6 @@ const AlgorithmVisual = (props: Props) => {
       BST.remove(Number(value));
     }
   };
-
-  const zoomGrid = () => {
-    if (scale < 1) {
-      setScale((scale) => scale + 0.1);
-    }
-  };
-
-  const unzoomGrid = () => {
-    setScale((scale) => scale - 0.1);
-  };
-
-  console.log(scale);
 
   return (
     <Grid.Container
@@ -51,44 +47,15 @@ const AlgorithmVisual = (props: Props) => {
         pr: "$8",
       }}
     >
-      <Button
-        auto
-        flat
-        css={{
-          position: "absolute",
-          right: "$8",
-          bottom: "60px",
-          zIndex: "1",
-        }}
-        onClick={zoomGrid}
-      >
-        +
-      </Button>
-      <Button
-        auto
-        flat
-        css={{
-          position: "absolute",
-          right: "$8",
-          bottom: "10px",
-          zIndex: "1",
-        }}
-        onClick={unzoomGrid}
-      >
-        -
-      </Button>
+      <ZoomButton scale={scale} setScale={setScale} type="zoom" />
+      <ZoomButton scale={scale} setScale={setScale} type="unzoom" />
       <Grid
         css={{
           height: "100%",
+          overflow: "hidden",
         }}
       >
-        <Grid.Container
-          direction="row"
-          alignItems="center"
-          gap={1}
-          as="form"
-          onSubmit={() => false}
-        >
+        <Grid.Container direction="row" alignItems="center" gap={1}>
           <Grid>
             <Input
               placeholder="Enter node"
@@ -96,44 +63,22 @@ const AlgorithmVisual = (props: Props) => {
               type={"number"}
               color="primary"
               value={value}
-              required
               onChange={(e) => setValue(e.target.value)}
             />
           </Grid>
           <Grid>
-            <Button
-              auto
-              type="submit"
-              onClick={(e) => {
-                e?.preventDefault();
-                addNode();
-              }}
-            >
+            <Button auto onClick={addNode}>
               Add Node
             </Button>
           </Grid>
           <Grid>
-            <Button
-              auto
-              color="error"
-              type="submit"
-              onClick={(e) => {
-                e?.preventDefault();
-                deleteNode();
-              }}
-            >
+            <Button auto color="error" onClick={deleteNode}>
               Delete Node
             </Button>
           </Grid>
         </Grid.Container>
-        <Grid
-          css={{
-            height: "100%",
-            width: "100%",
-            scale,
-            cursor: "grab",
-          }}
-        >
+
+        <DragganleGrid scale={scale}>
           <ul>
             {new Array(BST.calculateDepth(BST.root)).fill(0).map((_, i) => (
               <Grid
@@ -148,14 +93,18 @@ const AlgorithmVisual = (props: Props) => {
                 alignItems="center"
               >
                 {BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1).map(
-                  (item: typeof BTNode) => (
-                    <Node key={`${item.value}-${i + 1}`} item={item} />
-                  )
+                  (item: typeof BTNode) => {
+                    console.log(
+                      BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1),
+                      item
+                    );
+                    return <Node key={`${item.value}-${i + 1}`} item={item} />;
+                  }
                 )}
               </Grid>
             ))}
           </ul>
-        </Grid>
+        </DragganleGrid>
       </Grid>
     </Grid.Container>
   );
