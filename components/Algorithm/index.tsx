@@ -17,7 +17,8 @@ const AlgorithmVisual = (props: Props) => {
   const [value, setValue] = useState<string | undefined>();
 
   const addNode = () => {
-    if (value) {
+    const valueDoesNotExist = !BST.find(BST.root, Number(value));
+    if (value && valueDoesNotExist) {
       setValue("");
       BST.insert(Number(value));
       // const depth = BST.calculateDepth(BST.root);
@@ -93,12 +94,17 @@ const AlgorithmVisual = (props: Props) => {
                 alignItems="center"
               >
                 {BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1).map(
-                  (item: typeof BTNode) => {
-                    console.log(
-                      BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1),
-                      item
+                  (item: typeof BTNode, j) => {
+                    // console.log(
+                    //   BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1),
+                    //   item
+                    // );
+                    return (
+                      <Node
+                        key={`${item.value}-${i + 1}-${j + 1}`}
+                        item={item}
+                      />
                     );
-                    return <Node key={`${item.value}-${i + 1}`} item={item} />;
                   }
                 )}
               </Grid>
