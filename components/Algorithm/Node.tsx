@@ -41,9 +41,11 @@ const NodeItem = ({ item }: Props) => {
       {item.left && (
         <Grid
           css={{
-            transform: "rotate(-45deg)",
+            transform: "rotate(-30deg)",
             height: "1px",
             width: "30px",
+            ml: "-0.25rem",
+            mr: "0.5rem",
             backgroundColor: "#fff",
           }}
         />
@@ -51,7 +53,7 @@ const NodeItem = ({ item }: Props) => {
       {item.right && (
         <Grid
           css={{
-            transform: "rotate(45deg)",
+            transform: "rotate(30deg)",
             height: "1px",
             width: "30px",
             ml: "2rem",
