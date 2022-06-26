@@ -52,6 +52,7 @@ const Sidebar = (props: Props) => {
       }}
     >
       <Input
+        aria-label="Filter algorithms"
         placeholder="Filter..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}

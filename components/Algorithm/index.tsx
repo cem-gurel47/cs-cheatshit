@@ -33,7 +33,7 @@ const AlgorithmVisual = (props: Props) => {
   const calculatePadding = (level: number): string => {
     // the padding should decrease as the level increases and it should form a tree shape.
     const padding = 50 - level * 2.5;
-    return `calc(${padding}% - 2.5rem)`;
+    return `calc(${padding}% - ${2.5 + level}rem)`;
   };
 
   return (
@@ -58,6 +58,7 @@ const AlgorithmVisual = (props: Props) => {
         <Grid.Container direction="row" alignItems="center" gap={1}>
           <Grid>
             <Input
+              autoFocus
               aria-label="Enter node"
               placeholder="Enter node"
               bordered
@@ -65,6 +66,11 @@ const AlgorithmVisual = (props: Props) => {
               color="primary"
               value={value}
               onChange={(e) => setValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  addNode();
+                }
+              }}
             />
           </Grid>
           <Grid>
@@ -91,7 +97,7 @@ const AlgorithmVisual = (props: Props) => {
                     width: "100%",
                     px: calculatePadding(i),
                   }}
-                  justify={i === 0 ? "center" : "space-between"}
+                  justify="space-evenly"
                   alignItems="center"
                 >
                   {BST.current
@@ -108,6 +114,8 @@ const AlgorithmVisual = (props: Props) => {
                         <Node
                           key={`${item.value}-${i + 1}-${j + 1}`}
                           item={item}
+                          level={i + 1}
+                          tree={BST.current}
                         />
                       );
                     })}
