@@ -1,3 +1,5 @@
+import { Filter } from "react-iconly";
+import { NodeData, EdgeData } from "reaflow";
 export class BTNode {
   value: number;
   left: BTNode | null;
@@ -182,5 +184,55 @@ export class BinarySearchTree {
       level - 1
     );
     return left.concat(right);
+  }
+
+  returnNodeArray(root: BTNode | null): NodeData[] {
+    // the array should have the following structure:
+    // [{id: Node value, text : Node Value}]
+
+    if (root === null) {
+      return [];
+    }
+    const left = this.returnNodeArray(root.left);
+    const right = this.returnNodeArray(root.right);
+    //@ts-ignore
+    return [{ id: root.value.toString(), text: root.value.toString() }].concat(
+      //@ts-ignore
+      left,
+      right
+    );
+  }
+
+  returnEdgeArray(root: BTNode | null): EdgeData[] {
+    // the array should have the following structure:
+    // [{from: Node value, to: Node Value}]
+
+    if (root === null) {
+      return [];
+    }
+    const left = this.returnEdgeArray(root.left);
+    const right = this.returnEdgeArray(root.right);
+    //@ts-ignore
+    return (
+      [
+        root.left
+          ? {
+              id: `${root.value}-${root.left.value}`,
+              from: root.value.toString(),
+              to: root.left.value.toString(),
+            }
+          : undefined,
+        root.right
+          ? {
+              id: `${root.value}-${root.right.value}`,
+              from: root.value.toString(),
+              to: root.right.value.toString(),
+            }
+          : undefined,
+      ]
+        .filter((item) => item !== undefined)
+        //@ts-ignore
+        .concat(left, right)
+    );
   }
 }

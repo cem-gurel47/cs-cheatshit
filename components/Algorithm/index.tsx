@@ -1,16 +1,41 @@
 import React, { useState, useRef } from "react";
 import { Button, Grid, Input } from "@nextui-org/react";
-import ZoomButton from "./ZoomButton";
-import Node from "./Node";
-import DragganleGrid from "./DraggableGrid";
-import { BTNode, BinarySearchTree } from "./tree";
+// import ZoomButton from "./ZoomButton";
+import dynamic from "next/dynamic";
+const Canvas = dynamic(
+  //@ts-ignore
+  () =>
+    import("reaflow").then((value) => {
+      return value.Canvas;
+    }),
+  {
+    ssr: false,
+  }
+);
+//@ts-ignore
+const Node = dynamic(() => import("reaflow").then((value) => value.Node), {
+  ssr: false,
+});
+
+import { NodeData, EdgeData, CanvasRef, NodeProps } from "reaflow";
+import { BinarySearchTree } from "./tree";
+import { useMeasure } from "react-use";
 
 type Props = {};
 
 const AlgorithmVisual = (props: Props) => {
-  const [scale, setScale] = useState(1);
+  const [zoom, setZoom] = useState(1);
   const BST = useRef<BinarySearchTree>(new BinarySearchTree());
   const [value, setValue] = useState<string | undefined>();
+  const [ref, { width, height }] = useMeasure();
+  const canvasRef = useRef<CanvasRef | null>(null);
+  const [nodes, setNodes] = useState<NodeData[]>(
+    BST.current.returnNodeArray(BST.current.root)
+  );
+  const [edges, setEdges] = useState<EdgeData[]>(
+    BST.current.returnEdgeArray(BST.current.root)
+  );
+  const [selections, setSelections] = useState<string[]>([]);
 
   const addNode = () => {
     const valueDoesNotExist = !BST.current.find(
@@ -18,22 +43,20 @@ const AlgorithmVisual = (props: Props) => {
       Number(value)
     );
     if (value && valueDoesNotExist) {
-      setValue("");
       BST.current.insert(Number(value));
+      setValue("");
+      setNodes(BST.current.returnNodeArray(BST.current.root));
+      setEdges(BST.current.returnEdgeArray(BST.current.root));
     }
   };
 
   const deleteNode = () => {
     if (value) {
-      setValue("");
       BST.current.remove(Number(value));
+      setValue("");
+      setNodes(BST.current.returnNodeArray(BST.current.root));
+      setEdges(BST.current.returnEdgeArray(BST.current.root));
     }
-  };
-
-  const calculatePadding = (level: number): string => {
-    // the padding should decrease as the level increases and it should form a tree shape.
-    const padding = 50 - level * 2.5;
-    return `calc(${padding}% - ${2.5 + level}rem)`;
   };
 
   return (
@@ -47,8 +70,24 @@ const AlgorithmVisual = (props: Props) => {
         pr: "$8",
       }}
     >
-      <ZoomButton scale={scale} setScale={setScale} type="zoom" />
-      <ZoomButton scale={scale} setScale={setScale} type="unzoom" />
+      {/* <ZoomButton
+        type="zoom"
+        onPress={() => {
+          setZoom((zoom) => zoom + 0.1);
+          if (canvasRef.current && canvasRef.current.zoomIn) {
+            canvasRef.current.zoomIn();
+          }
+        }}
+      />
+      <ZoomButton
+        onPress={() => {
+          setZoom((zoom) => zoom - 0.1);
+          if (canvasRef.current && canvasRef.current.zoomOut) {
+            canvasRef.current.zoomOut();
+          }
+        }}
+        type="unzoom"
+      /> */}
       <Grid
         css={{
           height: "100%",
@@ -74,55 +113,65 @@ const AlgorithmVisual = (props: Props) => {
             />
           </Grid>
           <Grid>
-            <Button auto onClick={addNode}>
+            <Button auto onPress={addNode}>
               Add Node
             </Button>
           </Grid>
           <Grid>
-            <Button auto color="error" onClick={deleteNode}>
+            <Button auto color="error" onPress={deleteNode}>
               Delete Node
             </Button>
           </Grid>
         </Grid.Container>
-
-        <DragganleGrid scale={scale}>
-          <ul>
-            {new Array(BST.current.calculateDepth(BST.current.root))
-              .fill(0)
-              .map((_, i) => (
-                <Grid
-                  key={i}
-                  css={{
-                    display: "flex",
-                    width: "100%",
-                    px: calculatePadding(i),
-                  }}
-                  justify="space-evenly"
-                  alignItems="center"
-                >
-                  {BST.current
-                    .returnTreeItemsByLevelWithEmptyNodes(
-                      BST.current.root,
-                      i + 1
-                    )
-                    .map((item: BTNode, j: number) => {
-                      // console.log(
-                      //   BST.returnTreeItemsByLevelWithEmptyNodes(BST.root, i + 1),
-                      //   item
-                      // );
-                      return (
-                        <Node
-                          key={`${item.value}-${i + 1}-${j + 1}`}
-                          item={item}
-                          level={i + 1}
-                          tree={BST.current}
-                        />
-                      );
-                    })}
-                </Grid>
-              ))}
-          </ul>
-        </DragganleGrid>
+        <Grid
+          //@ts-ignore
+          ref={ref}
+          css={{
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Canvas
+            zoom={zoom}
+            ref={canvasRef}
+            width={width}
+            height={height}
+            nodes={nodes}
+            edges={edges}
+            zoomable={true}
+            selections={selections}
+            minZoom={0.1}
+            maxZoom={20}
+            node={(node: NodeProps) => (
+              <Node
+                {...node}
+                onClick={() => {
+                  if (selections[0] === node.id) {
+                    setSelections([]);
+                  } else {
+                    setSelections([node.id]);
+                  }
+                }}
+                draggable={false}
+                dragCursor="grab"
+                dragType="all"
+                removable
+                onRemove={() => {
+                  BST.current.remove(Number(node.properties.id));
+                  setNodes(BST.current.returnNodeArray(BST.current.root));
+                  setEdges(BST.current.returnEdgeArray(BST.current.root));
+                  setSelections([]);
+                }}
+              />
+            )}
+            onZoomChange={(z) => {
+              console.log("zooming", z);
+              setZoom(z);
+            }}
+            //@ts-ignore
+            defaultPosition="top"
+          />
+        </Grid>
       </Grid>
     </Grid.Container>
   );

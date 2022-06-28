@@ -2,25 +2,11 @@ import React from "react";
 import { Button } from "@nextui-org/react";
 
 type Props = {
-  scale: number;
-  setScale: React.Dispatch<React.SetStateAction<number>>;
+  onPress: () => void;
   type: "zoom" | "unzoom";
 };
 
-const ZoomButton = ({ setScale, scale, type }: Props) => {
-  const zoomGrid = () => {
-    console.log("clicked");
-    if (scale < 1) {
-      setScale((scale) => scale + 0.1);
-    }
-  };
-
-  const unzoomGrid = () => {
-    if (scale > 0.1) {
-      console.log("clicked");
-      setScale((scale) => scale - 0.1);
-    }
-  };
+const ZoomButton = ({ onPress, type }: Props) => {
   return (
     <Button
       auto
@@ -31,7 +17,7 @@ const ZoomButton = ({ setScale, scale, type }: Props) => {
         bottom: type === "zoom" ? "60px" : "10px",
         zIndex: 2,
       }}
-      onClick={type === "zoom" ? zoomGrid : unzoomGrid}
+      onPress={onPress}
     >
       {type === "zoom" ? "+" : "-"}
     </Button>
