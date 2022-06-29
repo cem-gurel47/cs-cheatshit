@@ -1,11 +1,14 @@
+import { NodeData, EdgeData } from "reaflow";
 export class BTNode {
   value: number;
   left: BTNode | null;
   right: BTNode | null;
-  constructor(value: number) {
+  parent: BTNode | null;
+  constructor(value: number, parent: BTNode | null) {
     this.value = value;
     this.left = null;
     this.right = null;
+    this.parent = parent;
   }
 }
 
@@ -16,29 +19,37 @@ export class BinarySearchTree {
     this.root = null;
   }
 
-  insertNode(root: BTNode | null, node: BTNode): void {
-    if (node.value < root!.value) {
-      if (root!.left === null) {
-        root!.left = node;
-      } else {
-        this.insertNode(root!.left, node);
+  insertNode(root: BTNode | null, value: number): void {
+    if (root === null) {
+      return;
+    }
+    if (value < root.value) {
+      if (root.left === null || Number.isNaN(root.left?.value)) {
+        root.left = new BTNode(value, root);
+        if (root.right === null) {
+          root.right = new BTNode(Number.NaN, root);
+        }
+        return;
       }
-    } else {
-      if (root!.right === null) {
-        root!.right = node;
-      } else {
-        this.insertNode(root!.right, node);
+      this.insertNode(root.left, value);
+    } else if (value > root.value) {
+      if (root.right === null || Number.isNaN(root.right?.value)) {
+        root.right = new BTNode(value, root);
+        if (root.left === null) {
+          root.left = new BTNode(Number.NaN, root);
+        }
+        return;
       }
+      this.insertNode(root.right, value);
     }
   }
 
   insert(value: number): void {
-    const node = new BTNode(value);
     if (this.root === null) {
-      this.root = node;
+      this.root = new BTNode(value, null);
       return;
     }
-    this.insertNode(this.root, node);
+    this.insertNode(this.root, value);
   }
 
   removeNode(root: BTNode | null, value: number): BTNode | null {
@@ -56,12 +67,28 @@ export class BinarySearchTree {
         root = null;
         return root;
       }
-      if (root.left === null) {
+      if (
+        root.left === null &&
+        root.right !== null &&
+        !Number.isNaN(root.right.value)
+      ) {
         root = root.right;
         return root;
       }
-      if (root.right === null) {
+      if (
+        root.right === null &&
+        root.left !== null &&
+        !Number.isNaN(root.left.value)
+      ) {
         root = root.left;
+        return root;
+      }
+      if (root.left !== null && Number.isNaN(root.right?.value)) {
+        root = root.left;
+        return root;
+      }
+      if (root.right !== null && Number.isNaN(root.left?.value)) {
+        root = root.right;
         return root;
       }
       const temp = this.findMin(root.right);
@@ -182,5 +209,68 @@ export class BinarySearchTree {
       level - 1
     );
     return left.concat(right);
+  }
+
+  returnNodeArray(root: BTNode | null): { id: string; text: string }[] {
+    // the array should have the following structure:
+    // [{id: Node value, text : Node Value}]
+
+    if (root === null) {
+      return [];
+    }
+    const left = this.returnNodeArray(root.left);
+    const right = this.returnNodeArray(root.right);
+    const value = Number.isNaN(root.value)
+      ? `NaN-${root.parent?.value}`
+      : root.value.toString();
+
+    return [
+      {
+        id: value,
+        text: value,
+      },
+    ].concat(left, right);
+  }
+
+  returnEdgeArray(root: BTNode | null): EdgeData[] {
+    // the array should have the following structure:
+    // [{from: Node value, to: Node Value}]
+
+    if (root === null) {
+      return [];
+    }
+    const left = this.returnEdgeArray(root.left);
+    const right = this.returnEdgeArray(root.right);
+
+    const leftValue = Number.isNaN(root.left?.value)
+      ? `NaN-${root.value}`
+      : root.left?.value.toString();
+
+    const rightValue = Number.isNaN(root.right?.value)
+      ? `NaN-${root.value}`
+      : root.right?.value.toString();
+
+    //@ts-ignore
+    return (
+      [
+        root.left
+          ? {
+              id: `${root.value}-${leftValue}`,
+              from: root.value.toString(),
+              to: leftValue,
+            }
+          : undefined,
+        root.right
+          ? {
+              id: `${root.value}-${rightValue}`,
+              from: root.value.toString(),
+              to: rightValue,
+            }
+          : undefined,
+      ]
+        .filter((item) => item !== undefined)
+        //@ts-ignore
+        .concat(left, right)
+    );
   }
 }

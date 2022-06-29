@@ -5,7 +5,10 @@ import { ImTree } from "react-icons/im";
 import { BiSearchAlt } from "react-icons/bi";
 import { BsSortNumericDownAlt } from "react-icons/bs";
 import { GrGraphQl } from "react-icons/gr";
-type Props = {};
+
+type Props = {
+  isHeader?: boolean;
+};
 
 const data = [
   {
@@ -41,7 +44,7 @@ const data = [
   },
 ];
 
-const Sidebar = (props: Props) => {
+const Sidebar = ({ isHeader }: Props) => {
   const [search, setSearch] = useState("");
   return (
     <Grid.Container
@@ -49,9 +52,13 @@ const Sidebar = (props: Props) => {
         width: "100%",
         mt: "-$2",
         display: "block",
+        "@media (max-width: 669px)": {
+          display: isHeader ? "block" : "none",
+        },
       }}
     >
       <Input
+        aria-label="Filter algorithms"
         placeholder="Filter..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}

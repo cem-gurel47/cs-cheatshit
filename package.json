@@ -18,7 +18,9 @@
     "react-anime": "^4.1.1",
     "react-dom": "18.2.0",
     "react-iconly": "^2.2.5",
-    "react-icons": "^4.4.0"
+    "react-icons": "^4.4.0",
+    "react-use": "^17.4.0",
+    "reaflow": "^5.0.6"
   },
   "devDependencies": {
     "@types/node": "18.0.0",
