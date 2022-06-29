@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button, Grid, Input } from "@nextui-org/react";
 // import ZoomButton from "./ZoomButton";
 import dynamic from "next/dynamic";
@@ -16,15 +16,24 @@ const Canvas = dynamic(
 const Node = dynamic(() => import("reaflow").then((value) => value.Node), {
   ssr: false,
 });
+//@ts-ignore
+const Edge = dynamic(() => import("reaflow").then((value) => value.Edge), {
+  ssr: false,
+});
 
-import { NodeData, EdgeData, CanvasRef, NodeProps } from "reaflow";
+//@ts-ignore
+const Label = dynamic(() => import("reaflow").then((value) => value.Label), {
+  ssr: false,
+});
+
+import { NodeData, EdgeData, CanvasRef, NodeProps, EdgeProps } from "reaflow";
 import { BinarySearchTree } from "./tree";
 import { useMeasure } from "react-use";
 
 type Props = {};
 
 const AlgorithmVisual = (props: Props) => {
-  const [zoom, setZoom] = useState(1);
+  const inputRef = useRef<HTMLInputElement>(null);
   const BST = useRef<BinarySearchTree>(new BinarySearchTree());
   const [value, setValue] = useState<string | undefined>();
   const [ref, { width, height }] = useMeasure();
@@ -37,6 +46,15 @@ const AlgorithmVisual = (props: Props) => {
   );
   const [selections, setSelections] = useState<string[]>([]);
 
+  console.log(nodes);
+  console.log(edges);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   const addNode = () => {
     const valueDoesNotExist = !BST.current.find(
       BST.current.root,
@@ -47,6 +65,7 @@ const AlgorithmVisual = (props: Props) => {
       setValue("");
       setNodes(BST.current.returnNodeArray(BST.current.root));
       setEdges(BST.current.returnEdgeArray(BST.current.root));
+      inputRef.current?.focus();
     }
   };
 
@@ -56,6 +75,7 @@ const AlgorithmVisual = (props: Props) => {
       setValue("");
       setNodes(BST.current.returnNodeArray(BST.current.root));
       setEdges(BST.current.returnEdgeArray(BST.current.root));
+      inputRef.current?.focus();
     }
   };
 
@@ -97,6 +117,7 @@ const AlgorithmVisual = (props: Props) => {
         <Grid.Container direction="row" alignItems="center" gap={1}>
           <Grid>
             <Input
+              ref={inputRef}
               autoFocus
               aria-label="Enter node"
               placeholder="Enter node"
@@ -132,41 +153,62 @@ const AlgorithmVisual = (props: Props) => {
           }}
         >
           <Canvas
-            zoom={zoom}
             ref={canvasRef}
             width={width}
             height={height}
             nodes={nodes}
             edges={edges}
-            zoomable={true}
             selections={selections}
-            minZoom={0.1}
-            maxZoom={20}
-            node={(node: NodeProps) => (
-              <Node
-                {...node}
-                onClick={() => {
-                  if (selections[0] === node.id) {
-                    setSelections([]);
-                  } else {
-                    setSelections([node.id]);
+            arrow={null}
+            edge={(edge: EdgeProps) => {
+              const hideEdge = edge.id.includes("NaN");
+              return (
+                <Edge
+                  {...edge}
+                  style={{
+                    stroke: hideEdge ? "transparent" : "#fff",
+                  }}
+                />
+              );
+            }}
+            node={(node: NodeProps) => {
+              const hideNode = node.id.includes("NaN");
+              console.log(hideNode, node.id);
+              return (
+                <Node
+                  {...node}
+                  onClick={() => {
+                    if (!hideNode) {
+                      if (selections[0] === node.id) {
+                        setSelections([]);
+                      } else {
+                        setSelections([node.id]);
+                      }
+                    }
+                  }}
+                  style={{
+                    fill: hideNode ? "#141414" : "#3A72F5",
+                    stroke: hideNode ? "#141414" : "#3A72F5",
+                    cursor: hideNode ? "default" : "pointer",
+                  }}
+                  label={
+                    <Label
+                      style={{
+                        fill: hideNode ? "#141414" : "#fff",
+                      }}
+                    />
                   }
-                }}
-                draggable={false}
-                dragCursor="grab"
-                dragType="all"
-                removable
-                onRemove={() => {
-                  BST.current.remove(Number(node.properties.id));
-                  setNodes(BST.current.returnNodeArray(BST.current.root));
-                  setEdges(BST.current.returnEdgeArray(BST.current.root));
-                  setSelections([]);
-                }}
-              />
-            )}
-            onZoomChange={(z) => {
-              console.log("zooming", z);
-              setZoom(z);
+                  draggable={false}
+                  dragCursor="grab"
+                  dragType="all"
+                  onRemove={() => {
+                    BST.current.remove(Number(node.properties.id));
+                    setNodes(BST.current.returnNodeArray(BST.current.root));
+                    setEdges(BST.current.returnEdgeArray(BST.current.root));
+                    setSelections([]);
+                  }}
+                />
+              );
             }}
             //@ts-ignore
             defaultPosition="top"
