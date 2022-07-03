@@ -137,30 +137,31 @@ export class BinarySearchTree {
     return this.find(root.right, value);
   }
 
-  preorder(root: BTNode | null): void {
+  preorder(root: BTNode | null): number[] {
     if (root === null) {
-      return;
+      return [];
     }
-    this.preorder(root.left);
-    this.preorder(root.right);
+    const left = this.preorder(root.left);
+    const right = this.preorder(root.right);
+    return [root.value, ...left, ...right].filter((v) => !Number.isNaN(v));
   }
 
-  inorder(root: BTNode | null): void {
+  inorder(root: BTNode | null): number[] {
     if (root === null) {
-      return;
+      return [];
     }
-    this.inorder(root.left);
-    console.log(root.value);
-    this.inorder(root.right);
+    const left = this.inorder(root.left);
+    const right = this.inorder(root.right);
+    return [...left, root.value, ...right].filter((v) => !Number.isNaN(v));
   }
 
-  postorder(root: BTNode | null): void {
+  postorder(root: BTNode | null): number[] {
     if (root === null) {
-      return;
+      return [];
     }
-    this.postorder(root.left);
-    this.postorder(root.right);
-    console.log(root.value);
+    const left = this.postorder(root.left);
+    const right = this.postorder(root.right);
+    return [...left, ...right, root.value].filter((v) => !Number.isNaN(v));
   }
 
   calculateDepth(root: BTNode | null): number {

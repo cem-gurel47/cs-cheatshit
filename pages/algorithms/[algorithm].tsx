@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { Grid, Text } from "@nextui-org/react";
 import Head from "next/head";
 import AlgorithmCard from "@components/Card/algorithm";
-import Logs from "@components/Logs";
 
 type Props = {};
 
@@ -53,13 +52,6 @@ const Algorithm = (props: Props) => {
             console.log("Hello World");
           }`}
         />
-      </Grid>
-      <Grid
-        css={{
-          mt: "-$8",
-        }}
-      >
-        <Logs />
       </Grid>
     </Grid.Container>
   );

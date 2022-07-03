@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button, Grid, Input } from "@nextui-org/react";
+import { Button, Grid, Input, Tooltip, Popover, Text } from "@nextui-org/react";
 import { NodeData, EdgeData } from "reaflow";
 import { BinarySearchTree } from "./Tree/tree";
 import { useMeasure } from "react-use";
 import TreeCanvas from "./Tree/TreeCanvas";
+import TraversalButton from "./Tree/TraversalButton";
 
 const AlgorithmVisual = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,7 +18,9 @@ const AlgorithmVisual = () => {
     BST.current.returnEdgeArray(BST.current.root)
   );
   const [selections, setSelections] = useState<string[]>([]);
-  // const [comparisonNode, setComparisonNode] = useState<number | null>(null);
+  const [inorderTraversal, setInorderTraversal] = useState<number[]>([]);
+  const [preorderTraversal, setPreorderTraversal] = useState<number[]>([]);
+  const [postorderTraversal, setPostorderTraversal] = useState<number[]>([]);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -32,22 +35,15 @@ const AlgorithmVisual = () => {
     );
     if (value && valueDoesNotExist) {
       BST.current.insert(Number(value));
+      setInorderTraversal(BST.current.inorder(BST.current.root));
+      setPreorderTraversal(BST.current.preorder(BST.current.root));
+      setPostorderTraversal(BST.current.postorder(BST.current.root));
       setValue("");
       setNodes(BST.current.returnNodeArray(BST.current.root));
       setEdges(BST.current.returnEdgeArray(BST.current.root));
       inputRef.current?.focus();
     }
   };
-
-  // const deleteNode = () => {
-  //   if (value) {
-  //     BST.current.remove(Number(value));
-  //     setValue("");
-  //     setNodes(BST.current.returnNodeArray(BST.current.root));
-  //     setEdges(BST.current.returnEdgeArray(BST.current.root));
-  //     inputRef.current?.focus();
-  //   }
-  // };
 
   return (
     <Grid.Container
@@ -91,11 +87,15 @@ const AlgorithmVisual = () => {
               Add Node
             </Button>
           </Grid>
-          {/* <Grid>
-            <Button auto color="error" onPress={deleteNode}>
-              Delete Node
-            </Button>
-          </Grid> */}
+          <Grid>
+            <TraversalButton type="Preorder" content={preorderTraversal} />
+          </Grid>
+          <Grid>
+            <TraversalButton type="Inorder" content={inorderTraversal} />
+          </Grid>
+          <Grid>
+            <TraversalButton type="Postorder" content={postorderTraversal} />
+          </Grid>
         </Grid.Container>
         <Grid
           //@ts-ignore
@@ -115,6 +115,9 @@ const AlgorithmVisual = () => {
             width={width}
             height={height}
             BST={BST}
+            setInorderTraversal={setInorderTraversal}
+            setPreorderTraversal={setPreorderTraversal}
+            setPostorderTraversal={setPostorderTraversal}
           />
         </Grid>
       </Grid>

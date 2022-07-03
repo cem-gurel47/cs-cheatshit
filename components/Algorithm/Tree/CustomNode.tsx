@@ -20,6 +20,9 @@ type Props = {
   setEdges: React.Dispatch<React.SetStateAction<EdgeData<any>[]>>;
   selections: string[];
   setSelections: React.Dispatch<React.SetStateAction<string[]>>;
+  setInorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
+  setPreorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
+  setPostorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
 const CustomNode = ({
@@ -30,6 +33,9 @@ const CustomNode = ({
   setSelections,
   setNodes,
   BST,
+  setInorderTraversal,
+  setPreorderTraversal,
+  setPostorderTraversal,
 }: Props) => {
   return (
     <Node
@@ -52,6 +58,9 @@ const CustomNode = ({
         BST.current.remove(Number(node.properties.id));
         setNodes(BST.current.returnNodeArray(BST.current.root));
         setEdges(BST.current.returnEdgeArray(BST.current.root));
+        setInorderTraversal(BST.current.inorder(BST.current.root));
+        setPreorderTraversal(BST.current.preorder(BST.current.root));
+        setPostorderTraversal(BST.current.postorder(BST.current.root));
         setSelections([]);
       }}
     >

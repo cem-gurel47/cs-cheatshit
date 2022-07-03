@@ -49,6 +49,7 @@ const Sidebar = ({ isHeader }: Props) => {
   return (
     <Grid.Container
       css={{
+        overflow: "scroll",
         width: "100%",
         mt: "-$2",
         display: "block",

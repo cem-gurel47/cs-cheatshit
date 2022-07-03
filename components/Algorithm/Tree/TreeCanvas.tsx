@@ -27,6 +27,9 @@ type Props = {
   selections: string[];
   setSelections: React.Dispatch<React.SetStateAction<string[]>>;
   BST: React.MutableRefObject<BinarySearchTree>;
+  setInorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
+  setPreorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
+  setPostorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
   width: number;
   height: number;
 };
@@ -39,6 +42,9 @@ const TreeCanvas = ({
   setEdges,
   setNodes,
   setSelections,
+  setInorderTraversal,
+  setPreorderTraversal,
+  setPostorderTraversal,
   width,
   height,
 }: Props) => {
@@ -73,6 +79,9 @@ const TreeCanvas = ({
             setNodes={setNodes}
             setEdges={setEdges}
             edges={edges}
+            setInorderTraversal={setInorderTraversal}
+            setPreorderTraversal={setPreorderTraversal}
+            setPostorderTraversal={setPostorderTraversal}
           />
         );
       }}
