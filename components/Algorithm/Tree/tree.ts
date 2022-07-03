@@ -23,6 +23,7 @@ export class BinarySearchTree {
     if (root === null) {
       return;
     }
+
     if (value < root.value) {
       if (root.left === null || Number.isNaN(root.left?.value)) {
         root.left = new BTNode(value, root);
