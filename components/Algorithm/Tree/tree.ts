@@ -1,4 +1,4 @@
-import { NodeData, EdgeData } from "reaflow";
+import { EdgeData } from "reaflow";
 export class BTNode {
   value: number;
   left: BTNode | null;
@@ -57,6 +57,7 @@ export class BinarySearchTree {
     if (root === null) {
       return null;
     }
+
     if (value < root.value) {
       root.left = this.removeNode(root.left, value);
       return root;
@@ -65,7 +66,7 @@ export class BinarySearchTree {
       return root;
     } else {
       if (root.left === null && root.right === null) {
-        root = null;
+        root = new BTNode(Number.NaN, root.parent);
         return root;
       }
       if (

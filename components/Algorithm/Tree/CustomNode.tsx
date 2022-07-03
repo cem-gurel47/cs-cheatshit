@@ -13,7 +13,6 @@ const Label = dynamic(() => import("reaflow").then((value) => value.Label), {
 
 type Props = {
   hideNode: boolean;
-  comparing: boolean;
   node: NodeProps;
   BST: React.MutableRefObject<BinarySearchTree>;
   setNodes: React.Dispatch<React.SetStateAction<NodeData<any>[]>>;
@@ -31,7 +30,6 @@ const CustomNode = ({
   setSelections,
   setNodes,
   BST,
-  comparing,
 }: Props) => {
   return (
     <Node
@@ -74,14 +72,11 @@ const CustomNode = ({
             z={0}
             x={0}
             style={{
+              borderRadius: "50%",
               cursor: hideNode ? "default" : "pointer",
               textAlign: "center",
-              backgroundColor: hideNode
-                ? "#141414"
-                : comparing
-                ? "red"
-                : "#3A72F5",
-              borderColor: hideNode ? "#141414" : comparing ? "red" : "#3A72F5",
+              backgroundColor: hideNode ? "#141414" : "#3A72F5",
+              borderColor: hideNode ? "#141414" : "#3A72F5",
             }}
           />
         );

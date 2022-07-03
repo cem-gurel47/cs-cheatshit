@@ -29,7 +29,6 @@ type Props = {
   BST: React.MutableRefObject<BinarySearchTree>;
   width: number;
   height: number;
-  comparisonNode: number | null;
 };
 
 const TreeCanvas = ({
@@ -42,7 +41,6 @@ const TreeCanvas = ({
   setSelections,
   width,
   height,
-  comparisonNode,
 }: Props) => {
   return (
     <Canvas
@@ -65,12 +63,9 @@ const TreeCanvas = ({
       }}
       node={(node: NodeProps) => {
         const hideNode = node.id.includes("NaN");
-        const comparing = Number(node.id) === comparisonNode;
-        // console.log(comparing, node.id);
         return (
           <CustomNode
             hideNode={hideNode}
-            comparing={comparing}
             node={node}
             BST={BST}
             selections={selections}

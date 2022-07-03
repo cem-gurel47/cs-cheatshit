@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { flushSync } from "react-dom";
 import { Button, Grid, Input } from "@nextui-org/react";
 import { NodeData, EdgeData } from "reaflow";
 import { BinarySearchTree } from "./Tree/tree";
 import { useMeasure } from "react-use";
 import TreeCanvas from "./Tree/TreeCanvas";
 
-type Props = {};
-
-const AlgorithmVisual = (props: Props) => {
+const AlgorithmVisual = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [ref, { width, height }] = useMeasure();
   const BST = useRef<BinarySearchTree>(new BinarySearchTree());
@@ -20,7 +17,7 @@ const AlgorithmVisual = (props: Props) => {
     BST.current.returnEdgeArray(BST.current.root)
   );
   const [selections, setSelections] = useState<string[]>([]);
-  const [comparisonNode, setComparisonNode] = useState<number | null>(null);
+  // const [comparisonNode, setComparisonNode] = useState<number | null>(null);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -28,19 +25,12 @@ const AlgorithmVisual = (props: Props) => {
     }
   }, []);
 
-  console.log(comparisonNode);
-
   const addNode = () => {
     const valueDoesNotExist = !BST.current.find(
       BST.current.root,
       Number(value)
     );
     if (value && valueDoesNotExist) {
-      if (BST.current.root) {
-        flushSync(() =>
-          setComparisonNode(BST.current.root?.left?.value || null)
-        );
-      }
       BST.current.insert(Number(value));
       setValue("");
       setNodes(BST.current.returnNodeArray(BST.current.root));
@@ -49,15 +39,15 @@ const AlgorithmVisual = (props: Props) => {
     }
   };
 
-  const deleteNode = () => {
-    if (value) {
-      BST.current.remove(Number(value));
-      setValue("");
-      setNodes(BST.current.returnNodeArray(BST.current.root));
-      setEdges(BST.current.returnEdgeArray(BST.current.root));
-      inputRef.current?.focus();
-    }
-  };
+  // const deleteNode = () => {
+  //   if (value) {
+  //     BST.current.remove(Number(value));
+  //     setValue("");
+  //     setNodes(BST.current.returnNodeArray(BST.current.root));
+  //     setEdges(BST.current.returnEdgeArray(BST.current.root));
+  //     inputRef.current?.focus();
+  //   }
+  // };
 
   return (
     <Grid.Container
@@ -79,6 +69,7 @@ const AlgorithmVisual = (props: Props) => {
         <Grid.Container direction="row" alignItems="center" gap={1}>
           <Grid>
             <Input
+              helperText="You can click on a node to delete it."
               ref={inputRef}
               autoFocus
               aria-label="Enter node"
@@ -100,11 +91,11 @@ const AlgorithmVisual = (props: Props) => {
               Add Node
             </Button>
           </Grid>
-          <Grid>
+          {/* <Grid>
             <Button auto color="error" onPress={deleteNode}>
               Delete Node
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid.Container>
         <Grid
           //@ts-ignore
@@ -124,7 +115,6 @@ const AlgorithmVisual = (props: Props) => {
             width={width}
             height={height}
             BST={BST}
-            comparisonNode={comparisonNode}
           />
         </Grid>
       </Grid>
