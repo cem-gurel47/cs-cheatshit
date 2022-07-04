@@ -11,7 +11,7 @@ type Props = {
 const NodeInput = ({ inputRef, value, setValue, addNode }: Props) => {
   return (
     <Input
-      helperText="You can click on a node to delete it."
+      helperText="Press enter to add or click to delete."
       ref={inputRef}
       autoFocus
       aria-label="Enter node"

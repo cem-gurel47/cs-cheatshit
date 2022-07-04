@@ -16,6 +16,8 @@ interface BSTContext {
   setPreorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
   postorderTraversal: number[];
   setPostorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
+  searchList: number[];
+  setSearchList: React.Dispatch<React.SetStateAction<number[]>>;
 }
 // @ts-ignore
 export const BSTContext = createContext<BSTContext>({});
@@ -32,6 +34,7 @@ const BSTContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [inorderTraversal, setInorderTraversal] = useState<number[]>([]);
   const [preorderTraversal, setPreorderTraversal] = useState<number[]>([]);
   const [postorderTraversal, setPostorderTraversal] = useState<number[]>([]);
+  const [searchList, setSearchList] = useState<number[]>([]);
 
   return (
     <BSTContext.Provider
@@ -49,6 +52,8 @@ const BSTContextProvider = ({ children }: { children: React.ReactNode }) => {
         setPreorderTraversal,
         postorderTraversal,
         setPostorderTraversal,
+        searchList,
+        setSearchList,
       }}
     >
       {children}

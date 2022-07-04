@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { BSTContext } from "@contexts/BST";
-import { Button, Grid } from "@nextui-org/react";
+import { Grid } from "@nextui-org/react";
 import { useMeasure } from "react-use";
-import { Search } from "react-iconly";
 import TreeCanvas from "./Tree/TreeCanvas";
 import TraversalButton from "./Tree/TraversalButton";
 import NodeInput from "./Tree/NodeInput";
+import SearchButton from "./Tree/SearchButton";
+import ClearButton from "./Tree/ClearButton";
+import AddNodeButton from "./Tree/AddNodeButton";
 
 const TRAVERSALS = ["Preorder", "Inorder", "Postorder"];
 
@@ -20,6 +22,7 @@ const AlgorithmVisual = () => {
     setPostorderTraversal,
     setNodes,
     setEdges,
+    setSearchList,
   } = useContext(BSTContext);
 
   useEffect(() => {
@@ -42,6 +45,27 @@ const AlgorithmVisual = () => {
       setNodes(BST.current.returnNodeArray(BST.current.root));
       setEdges(BST.current.returnEdgeArray(BST.current.root));
       inputRef.current?.focus();
+      setSearchList([]);
+    }
+  };
+
+  const startSearching = () => {
+    const valueDoesNotExist = !BST.current.find(
+      BST.current.root,
+      Number(value)
+    );
+    if (value && valueDoesNotExist) {
+      alert("Value does not exist");
+      setSearchList([]);
+      return;
+    }
+
+    if (value) {
+      const searchList = BST.current.nodesUntilFound(
+        BST.current.root,
+        Number(value)
+      );
+      setSearchList(searchList);
     }
   };
 
@@ -72,16 +96,13 @@ const AlgorithmVisual = () => {
             />
           </Grid>
           <Grid>
-            <Button auto onPress={addNode}>
-              Add Node
-            </Button>
+            <AddNodeButton addNode={addNode} />
           </Grid>
           <Grid>
-            <Button
-              color="success"
-              icon={<Search set="bold" primaryColor="#fff" />}
-              auto
-            />
+            <SearchButton startSearching={startSearching} />
+          </Grid>
+          <Grid>
+            <ClearButton />
           </Grid>
           {TRAVERSALS.map((traversal) => (
             <Grid key={traversal}>

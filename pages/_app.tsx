@@ -31,7 +31,13 @@ function MyApp({ Component, pageProps }: AppProps) {
             <Header />
             {showSidebar ? (
               <Grid.Container gap={2}>
-                <Grid xs={12} sm={2.5}>
+                <Grid
+                  xs={12}
+                  sm={2.5}
+                  css={{
+                    overflowY: "scroll",
+                  }}
+                >
                   <Sidebar />
                 </Grid>
                 <Grid xs={12} sm={9.5}>

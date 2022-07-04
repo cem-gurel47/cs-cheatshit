@@ -137,6 +137,19 @@ export class BinarySearchTree {
     return this.find(root.right, value);
   }
 
+  nodesUntilFound(root: BTNode | null, value: number): number[] {
+    if (root === null) {
+      return [];
+    }
+    if (root.value === value) {
+      return [root.value];
+    }
+    if (value < root.value) {
+      return [ root.value,...this.nodesUntilFound(root.left, value)];
+    }
+    return [root.value,...this.nodesUntilFound(root.right, value)];
+  }
+
   preorder(root: BTNode | null): number[] {
     if (root === null) {
       return [];

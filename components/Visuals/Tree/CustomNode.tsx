@@ -26,6 +26,7 @@ const CustomNode = ({ node, hideNode }: Props) => {
     setPostorderTraversal,
     setPreorderTraversal,
     selections,
+    searchList,
   } = useContext(BSTContext);
   return (
     <Node
@@ -55,6 +56,12 @@ const CustomNode = ({ node, hideNode }: Props) => {
       }}
     >
       {({ width, height }: { width: number; height: number }) => {
+        const found =
+          searchList[searchList.length - 1] === Number(node.properties.id);
+        const searching =
+          searchList.length > 0 &&
+          searchList.includes(Number(node.properties.id));
+
         return (
           <foreignObject
             onClick={() => {
@@ -74,7 +81,13 @@ const CustomNode = ({ node, hideNode }: Props) => {
               borderRadius: "50%",
               cursor: hideNode ? "default" : "pointer",
               textAlign: "center",
-              backgroundColor: hideNode ? "transparent" : "#3A72F5",
+              backgroundColor: hideNode
+                ? "transparent"
+                : found
+                ? "#19c964"
+                : searching
+                ? "#f00"
+                : "#3A72F5",
               borderColor: hideNode ? "transparent" : "#3A72F5",
             }}
           />
