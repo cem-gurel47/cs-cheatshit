@@ -261,6 +261,7 @@ export class BinarySearchTree {
               id: `${root.value}-${leftValue}`,
               from: root.value.toString(),
               to: leftValue,
+              disabled: true,
             }
           : undefined,
         root.right
@@ -268,6 +269,7 @@ export class BinarySearchTree {
               id: `${root.value}-${rightValue}`,
               from: root.value.toString(),
               to: rightValue,
+              disabled: true,
             }
           : undefined,
       ]

@@ -47,7 +47,7 @@ const CustomNode = ({
       label={
         <Label
           style={{
-            fill: hideNode ? "#141414" : "#fff",
+            fill: hideNode ? "transparent" : "#fff",
           }}
         />
       }
@@ -84,8 +84,8 @@ const CustomNode = ({
               borderRadius: "50%",
               cursor: hideNode ? "default" : "pointer",
               textAlign: "center",
-              backgroundColor: hideNode ? "#141414" : "#3A72F5",
-              borderColor: hideNode ? "#141414" : "#3A72F5",
+              backgroundColor: hideNode ? "transparent" : "#3A72F5",
+              borderColor: hideNode ? "transparent" : "#3A72F5",
             }}
           />
         );

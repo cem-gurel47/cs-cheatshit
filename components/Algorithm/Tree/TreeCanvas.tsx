@@ -62,7 +62,7 @@ const TreeCanvas = ({
           <Edge
             {...edge}
             style={{
-              stroke: hideEdge ? "transparent" : "#fff",
+              stroke: hideEdge ? "transparent" : "#F4A425",
             }}
           />
         );

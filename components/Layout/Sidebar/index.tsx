@@ -12,7 +12,7 @@ type Props = {
 
 const data = [
   {
-    items: ["Binary Tree", "Binary Search Tree", "AVL Tree"],
+    items: ["Binary Search Tree", "AVL Tree"],
     title: "Tree Algorithms",
     Icon: ImTree,
   },
