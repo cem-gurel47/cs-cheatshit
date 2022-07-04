@@ -1,6 +1,6 @@
-import React from "react";
-import { NodeProps, EdgeData, NodeData } from "reaflow";
-import { BinarySearchTree } from "./tree";
+import React, { useContext } from "react";
+import { BSTContext } from "@contexts/BST";
+import { NodeProps } from "reaflow";
 import dynamic from "next/dynamic";
 //@ts-ignore
 const Node = dynamic(() => import("reaflow").then((value) => value.Node), {
@@ -14,29 +14,19 @@ const Label = dynamic(() => import("reaflow").then((value) => value.Label), {
 type Props = {
   hideNode: boolean;
   node: NodeProps;
-  BST: React.MutableRefObject<BinarySearchTree>;
-  setNodes: React.Dispatch<React.SetStateAction<NodeData<any>[]>>;
-  edges: EdgeData[];
-  setEdges: React.Dispatch<React.SetStateAction<EdgeData<any>[]>>;
-  selections: string[];
-  setSelections: React.Dispatch<React.SetStateAction<string[]>>;
-  setInorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
-  setPreorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
-  setPostorderTraversal: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-const CustomNode = ({
-  node,
-  hideNode,
-  setEdges,
-  selections,
-  setSelections,
-  setNodes,
-  BST,
-  setInorderTraversal,
-  setPreorderTraversal,
-  setPostorderTraversal,
-}: Props) => {
+const CustomNode = ({ node, hideNode }: Props) => {
+  const {
+    BST,
+    setNodes,
+    setEdges,
+    setSelections,
+    setInorderTraversal,
+    setPostorderTraversal,
+    setPreorderTraversal,
+    selections,
+  } = useContext(BSTContext);
   return (
     <Node
       {...node}

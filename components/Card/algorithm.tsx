@@ -1,7 +1,7 @@
 import React from "react";
 // import dynamic from "next/dynamic";
 import { Grid, useTheme } from "@nextui-org/react";
-import AlgorithmVisual from "@components/Algorithm";
+import AlgorithmVisual from "@components/Visuals";
 // const CodeEditor = dynamic(import("@components/CodeEditor"), {
 //   ssr: false,
 // });

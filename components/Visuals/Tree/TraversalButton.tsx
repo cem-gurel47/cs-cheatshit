@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
+import { BSTContext } from "@contexts/BST";
 import { Tooltip, Popover, Button, Text } from "@nextui-org/react";
 import { ChevronLeft, ChevronRight, ChevronDown } from "react-iconly";
 
 type Props = {
-  type: "Inorder" | "Preorder" | "Postorder";
-  content: number[];
+  type: string;
 };
 
-const TraversalButton = ({ type, content }: Props) => {
+const TraversalButton = ({ type }: Props) => {
+  const { inorderTraversal, preorderTraversal, postorderTraversal } =
+    useContext(BSTContext);
+
+  const content =
+    type === "Inorder"
+      ? inorderTraversal
+      : type === "Preorder"
+      ? preorderTraversal
+      : postorderTraversal;
+
   return (
     <Popover isBordered>
       <Tooltip content={`${type} Traversal`}>
