@@ -1,4 +1,4 @@
-import { NodeData, EdgeData } from "reaflow";
+import { EdgeData } from "reaflow";
 export class BTNode {
   value: number;
   left: BTNode | null;
@@ -23,6 +23,7 @@ export class BinarySearchTree {
     if (root === null) {
       return;
     }
+
     if (value < root.value) {
       if (root.left === null || Number.isNaN(root.left?.value)) {
         root.left = new BTNode(value, root);
@@ -56,6 +57,7 @@ export class BinarySearchTree {
     if (root === null) {
       return null;
     }
+
     if (value < root.value) {
       root.left = this.removeNode(root.left, value);
       return root;
@@ -64,7 +66,7 @@ export class BinarySearchTree {
       return root;
     } else {
       if (root.left === null && root.right === null) {
-        root = null;
+        root = new BTNode(Number.NaN, root.parent);
         return root;
       }
       if (
@@ -135,30 +137,44 @@ export class BinarySearchTree {
     return this.find(root.right, value);
   }
 
-  preorder(root: BTNode | null): void {
+  nodesUntilFound(root: BTNode | null, value: number): number[] {
     if (root === null) {
-      return;
+      return [];
     }
-    this.preorder(root.left);
-    this.preorder(root.right);
+    if (root.value === value) {
+      return [root.value];
+    }
+    if (value < root.value) {
+      return [ root.value,...this.nodesUntilFound(root.left, value)];
+    }
+    return [root.value,...this.nodesUntilFound(root.right, value)];
   }
 
-  inorder(root: BTNode | null): void {
+  preorder(root: BTNode | null): number[] {
     if (root === null) {
-      return;
+      return [];
     }
-    this.inorder(root.left);
-    console.log(root.value);
-    this.inorder(root.right);
+    const left = this.preorder(root.left);
+    const right = this.preorder(root.right);
+    return [root.value, ...left, ...right].filter((v) => !Number.isNaN(v));
   }
 
-  postorder(root: BTNode | null): void {
+  inorder(root: BTNode | null): number[] {
     if (root === null) {
-      return;
+      return [];
     }
-    this.postorder(root.left);
-    this.postorder(root.right);
-    console.log(root.value);
+    const left = this.inorder(root.left);
+    const right = this.inorder(root.right);
+    return [...left, root.value, ...right].filter((v) => !Number.isNaN(v));
+  }
+
+  postorder(root: BTNode | null): number[] {
+    if (root === null) {
+      return [];
+    }
+    const left = this.postorder(root.left);
+    const right = this.postorder(root.right);
+    return [...left, ...right, root.value].filter((v) => !Number.isNaN(v));
   }
 
   calculateDepth(root: BTNode | null): number {
@@ -258,6 +274,7 @@ export class BinarySearchTree {
               id: `${root.value}-${leftValue}`,
               from: root.value.toString(),
               to: leftValue,
+              disabled: true,
             }
           : undefined,
         root.right
@@ -265,6 +282,7 @@ export class BinarySearchTree {
               id: `${root.value}-${rightValue}`,
               from: root.value.toString(),
               to: rightValue,
+              disabled: true,
             }
           : undefined,
       ]

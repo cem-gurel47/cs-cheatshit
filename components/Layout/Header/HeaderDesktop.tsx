@@ -37,7 +37,7 @@ const Header = () => {
       <Grid xs={4} alignItems="center">
         <Grid.Container gap={2} justify="center">
           <Grid>
-            <Link href="/algorithms/binary-tree">
+            <Link href="/algorithms/binary-search-tree">
               <Text
                 size={20}
                 css={{

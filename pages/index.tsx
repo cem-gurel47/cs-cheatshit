@@ -83,7 +83,7 @@ const Home: NextPage = () => {
           <Text h3 color="#ff4ecd" margin="auto">
             Visualize popular algorithms step by step
           </Text>
-          <Link href="/algorithms/binary-tree">
+          <Link href="/algorithms/binary-search-tree">
             <Button
               bordered
               shadow

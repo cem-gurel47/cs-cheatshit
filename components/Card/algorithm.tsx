@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import { Grid, Dropdown } from "@nextui-org/react";
-import AlgorithmVisual from "@components/Algorithm";
-const CodeEditor = dynamic(import("@components/CodeEditor"), {
-  ssr: false,
-});
+import React from "react";
+// import dynamic from "next/dynamic";
+import { Grid, useTheme } from "@nextui-org/react";
+import AlgorithmVisual from "@components/Visuals";
+// const CodeEditor = dynamic(import("@components/CodeEditor"), {
+//   ssr: false,
+// });
 
 type Props = {
   code: string;
@@ -25,14 +25,15 @@ const CircularDiv = ({ color }: { color: string }) => {
 };
 
 const AlgorithmCard = ({ code }: Props) => {
-  const [mode, setMode] = useState<Set<string>>(new Set(["visual"]));
+  const { isDark } = useTheme();
+  // const [mode, setMode] = useState<Set<string>>(new Set(["visual"]));
   return (
     <Grid.Container
       css={{
         width: "100%",
         pt: "$10",
         pb: "$10",
-        bg: "#141414",
+        bg: isDark ? "#141414" : "#F0F3F5",
         borderRadius: "$lg",
       }}
     >
@@ -46,12 +47,18 @@ const AlgorithmCard = ({ code }: Props) => {
         }}
         justify="space-between"
       >
-        <Grid.Container direction="row" alignItems="center">
+        <Grid.Container
+          direction="row"
+          alignItems="center"
+          css={{
+            py: "$5",
+          }}
+        >
           <CircularDiv color="red" />
           <CircularDiv color="yellow" />
           <CircularDiv color="green" />
         </Grid.Container>
-        <Grid.Container direction="row" alignItems="center" justify="flex-end">
+        {/* <Grid.Container direction="row" alignItems="center" justify="flex-end">
           <Dropdown>
             <Dropdown.Button flat css={{ tt: "capitalize" }}>
               {mode}
@@ -68,14 +75,15 @@ const AlgorithmCard = ({ code }: Props) => {
               <Dropdown.Item key="visual">Visual</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-        </Grid.Container>
+        </Grid.Container> */}
       </Grid>
       <Grid xs={12} css={{}}>
-        {mode.values().next().value === "code" ? (
+        <AlgorithmVisual />
+        {/* {mode.values().next().value === "code" ? (
           <CodeEditor code={code} />
         ) : (
           <AlgorithmVisual />
-        )}
+        )} */}
       </Grid>
     </Grid.Container>
   );

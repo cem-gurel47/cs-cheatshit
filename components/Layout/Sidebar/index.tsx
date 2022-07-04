@@ -12,7 +12,7 @@ type Props = {
 
 const data = [
   {
-    items: ["Binary Tree", "Binary Search Tree", "AVL Tree"],
+    items: ["Binary Search Tree", "AVL Tree"],
     title: "Tree Algorithms",
     Icon: ImTree,
   },
@@ -49,6 +49,7 @@ const Sidebar = ({ isHeader }: Props) => {
   return (
     <Grid.Container
       css={{
+        overflow: "scroll",
         width: "100%",
         mt: "-$2",
         display: "block",
