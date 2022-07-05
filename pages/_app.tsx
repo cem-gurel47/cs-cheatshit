@@ -32,15 +32,17 @@ function MyApp({ Component, pageProps }: AppProps) {
             {showSidebar ? (
               <Grid.Container gap={2}>
                 <Grid
-                  xs={12}
-                  sm={2.5}
+                  sm={0}
+                  md={2.5}
                   css={{
-                    overflowY: "scroll",
+                    "@media (max-width:992px)": {
+                      display: "none !important",
+                    },
                   }}
                 >
                   <Sidebar />
                 </Grid>
-                <Grid xs={12} sm={9.5}>
+                <Grid xs={12} md={9.5}>
                   <Component {...pageProps} />
                 </Grid>
               </Grid.Container>

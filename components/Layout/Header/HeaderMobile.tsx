@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Collapse } from "@nextui-org/react";
-
 import Sidebar from "../Sidebar";
+import MenuButton from "./MenuButton";
 
 const HeaderMobile = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <Collapse
+      expanded={isOpen}
       title="CheatShit"
+      arrowIcon={<MenuButton isOpen={isOpen} setIsOpen={setIsOpen} />}
       divider={false}
-      as="header"
       css={{
         display: "none",
         "@media (max-width: 669px)": {

@@ -1,35 +1,38 @@
-import React from "react";
-import { Grid, Text, Switch, useTheme, Link } from "@nextui-org/react";
+import React, { useState } from "react";
+import {
+  Grid,
+  Text,
+  Switch,
+  useTheme,
+  Link,
+  Button,
+  Collapse,
+} from "@nextui-org/react";
 import { useTheme as useNextTheme } from "next-themes";
 import Sunicon from "../../../public/Sunicon";
 import Moonicon from "../../../public/Moonicon";
 import Githubicon from "../../../public/Githubicon";
+import Sidebar from "../Sidebar";
+import MenuButton from "./MenuButton";
 
 const Header = () => {
   const { setTheme } = useNextTheme();
   const { isDark } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Grid.Container
       gap={2}
       css={{
         display: "none",
-        "@media (min-width:1280px)": {
+        "@media (min-width:670px) and (max-width:1280px)": {
           display: "flex",
         },
       }}
     >
       <Grid xs={4} alignItems="center">
         <Link href="/">
-          <Text
-            weight="bold"
-            size={30}
-            css={{
-              "@smMax": {
-                fontSize: "24px",
-              },
-            }}
-          >
+          <Text weight="bold" size={30}>
             CheatShit
           </Text>
         </Link>
@@ -88,8 +91,24 @@ const Header = () => {
           onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
           iconOn={<Moonicon />}
           iconOff={<Sunicon />}
+          css={{
+            mr: "$4",
+          }}
         />
+        <MenuButton isOpen={isOpen} setIsOpen={setIsOpen} />
       </Grid>
+      <Collapse
+        expanded={isOpen}
+        divider={false}
+        arrowIcon={<div />}
+        title=""
+        css={{
+          width: "100%",
+          mt: "-$12",
+        }}
+      >
+        <Sidebar />
+      </Collapse>
     </Grid.Container>
   );
 };
