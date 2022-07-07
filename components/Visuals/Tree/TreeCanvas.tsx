@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BSTContext } from "@contexts/BST";
+import { TreeContext } from "@contexts/tree";
 import dynamic from "next/dynamic";
 import { NodeProps, EdgeProps } from "reaflow";
 import CustomNode from "./CustomNode";
@@ -25,7 +25,7 @@ type Props = {
 };
 
 const TreeCanvas = ({ width, height }: Props) => {
-  const { nodes, edges, selections } = useContext(BSTContext);
+  const { nodes, edges, selections } = useContext(TreeContext);
   return (
     <Canvas
       width={width}

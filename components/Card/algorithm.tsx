@@ -7,7 +7,7 @@ import AlgorithmVisual from "@components/Visuals";
 // });
 
 type Props = {
-  code: string;
+  algorithm: string | string[] | undefined;
 };
 
 const CircularDiv = ({ color }: { color: string }) => {
@@ -24,7 +24,7 @@ const CircularDiv = ({ color }: { color: string }) => {
   );
 };
 
-const AlgorithmCard = ({ code }: Props) => {
+const AlgorithmCard = ({ algorithm }: Props) => {
   const { isDark } = useTheme();
   // const [mode, setMode] = useState<Set<string>>(new Set(["visual"]));
   return (
@@ -77,8 +77,8 @@ const AlgorithmCard = ({ code }: Props) => {
           </Dropdown>
         </Grid.Container> */}
       </Grid>
-      <Grid xs={12} css={{}}>
-        <AlgorithmVisual />
+      <Grid xs={12}>
+        <AlgorithmVisual algorithm={algorithm} />
         {/* {mode.values().next().value === "code" ? (
           <CodeEditor code={code} />
         ) : (

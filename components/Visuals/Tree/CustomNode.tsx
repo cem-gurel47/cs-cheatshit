@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BSTContext } from "@contexts/BST";
+import { TreeContext } from "@contexts/tree";
 import { NodeProps } from "reaflow";
 import dynamic from "next/dynamic";
 //@ts-ignore
@@ -18,7 +18,7 @@ type Props = {
 
 const CustomNode = ({ node, hideNode }: Props) => {
   const {
-    BST,
+    tree,
     setNodes,
     setEdges,
     setSelections,
@@ -27,7 +27,8 @@ const CustomNode = ({ node, hideNode }: Props) => {
     setPreorderTraversal,
     selections,
     searchList,
-  } = useContext(BSTContext);
+  } = useContext(TreeContext);
+
   return (
     <Node
       {...node}
@@ -46,12 +47,12 @@ const CustomNode = ({ node, hideNode }: Props) => {
       dragCursor="grab"
       dragType="all"
       onRemove={() => {
-        BST.current.remove(Number(node.properties.id));
-        setNodes(BST.current.returnNodeArray(BST.current.root));
-        setEdges(BST.current.returnEdgeArray(BST.current.root));
-        setInorderTraversal(BST.current.inorder(BST.current.root));
-        setPreorderTraversal(BST.current.preorder(BST.current.root));
-        setPostorderTraversal(BST.current.postorder(BST.current.root));
+        tree.current.remove(Number(node.properties.id));
+        setNodes(tree.current.returnNodeArray(tree.current.root));
+        setEdges(tree.current.returnEdgeArray(tree.current.root));
+        setInorderTraversal(tree.current.inorder(tree.current.root));
+        setPreorderTraversal(tree.current.preorder(tree.current.root));
+        setPostorderTraversal(tree.current.postorder(tree.current.root));
         setSelections([]);
       }}
     >

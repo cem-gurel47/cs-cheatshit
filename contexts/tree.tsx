@@ -1,9 +1,11 @@
-import React, { createContext, useRef, useState } from "react";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import { BinarySearchTree } from "@algorithms/Trees/BST";
+import { AVLTree } from "@algorithms/Trees/AVL";
 import { NodeData, EdgeData } from "reaflow";
+import { useRouter } from "next/router";
 
-interface BSTContext {
-  BST: React.MutableRefObject<BinarySearchTree>;
+interface TreeContextProps {
+  tree: React.MutableRefObject<BinarySearchTree | AVLTree>;
   nodes: NodeData[];
   setNodes: React.Dispatch<React.SetStateAction<NodeData[]>>;
   edges: EdgeData[];
@@ -20,15 +22,19 @@ interface BSTContext {
   setSearchList: React.Dispatch<React.SetStateAction<number[]>>;
 }
 // @ts-ignore
-export const BSTContext = createContext<BSTContext>({});
+export const TreeContext = createContext<TreeContextProps>({});
 
-const BSTContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const BST = useRef<BinarySearchTree>(new BinarySearchTree());
+const TreeContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter();
+  const { algorithm } = router.query;
+  const tree = useRef<BinarySearchTree | AVLTree>(
+    algorithm?.includes("avl") ? new AVLTree() : new BinarySearchTree()
+  );
   const [nodes, setNodes] = useState<NodeData[]>(
-    BST.current.returnNodeArray(BST.current.root)
+    tree.current.returnNodeArray(tree.current.root)
   );
   const [edges, setEdges] = useState<EdgeData[]>(
-    BST.current.returnEdgeArray(BST.current.root)
+    tree.current.returnEdgeArray(tree.current.root)
   );
   const [selections, setSelections] = useState<string[]>([]);
   const [inorderTraversal, setInorderTraversal] = useState<number[]>([]);
@@ -36,10 +42,18 @@ const BSTContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [postorderTraversal, setPostorderTraversal] = useState<number[]>([]);
   const [searchList, setSearchList] = useState<number[]>([]);
 
+  useEffect(() => {
+    if (algorithm?.includes("avl")) {
+      tree.current = new AVLTree();
+    } else {
+      tree.current = new BinarySearchTree();
+    }
+  }, [algorithm]);
+
   return (
-    <BSTContext.Provider
+    <TreeContext.Provider
       value={{
-        BST,
+        tree,
         nodes,
         setNodes,
         edges,
@@ -57,8 +71,8 @@ const BSTContextProvider = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       {children}
-    </BSTContext.Provider>
+    </TreeContext.Provider>
   );
 };
 
-export default BSTContextProvider;
+export default TreeContextProvider;

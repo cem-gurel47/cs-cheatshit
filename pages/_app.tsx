@@ -3,7 +3,7 @@ import { NextUIProvider, createTheme, Grid } from "@nextui-org/react";
 import { ThemeProvider } from "next-themes";
 import { Header, Layout, Sidebar } from "@components/Layout/index";
 import { useRouter } from "next/router";
-import BSTContextProvider from "@contexts/BST";
+import TreeContextProvider from "@contexts/tree";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <NextUIProvider>
-        <BSTContextProvider>
+        <TreeContextProvider>
           <Layout>
             <Header />
             {showSidebar ? (
@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               <Component {...pageProps} />
             )}
           </Layout>
-        </BSTContextProvider>
+        </TreeContextProvider>
       </NextUIProvider>
     </ThemeProvider>
   );

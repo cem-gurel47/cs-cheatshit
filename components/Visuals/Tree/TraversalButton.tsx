@@ -1,7 +1,12 @@
-import React, { useContext } from "react";
-import { BSTContext } from "@contexts/BST";
-import { Tooltip, Popover, Button, Text } from "@nextui-org/react";
-import { ChevronLeft, ChevronRight, ChevronDown } from "react-iconly";
+import React, { useContext, useCallback } from "react";
+import { TreeContext } from "@contexts/tree";
+import { Tooltip, Popover, Button, Text, Grid } from "@nextui-org/react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  ArrowRight,
+} from "react-iconly";
 
 type Props = {
   type: string;
@@ -9,7 +14,7 @@ type Props = {
 
 const TraversalButton = ({ type }: Props) => {
   const { inorderTraversal, preorderTraversal, postorderTraversal } =
-    useContext(BSTContext);
+    useContext(TreeContext);
 
   const content =
     type === "Inorder"
@@ -17,6 +22,26 @@ const TraversalButton = ({ type }: Props) => {
       : type === "Preorder"
       ? preorderTraversal
       : postorderTraversal;
+
+  const formatTraversal = useCallback(() => {
+    const items: React.ReactNode[] = [];
+    content.forEach((item, index) => {
+      items.push(<Text key={item}>{item}</Text>);
+      if (index !== content.length - 1) {
+        items.push(
+          <ArrowRight
+            set="bold"
+            primaryColor="blueviolet"
+            style={{
+              marginLeft: "0.25rem",
+              marginRight: "0.25rem",
+            }}
+          />
+        );
+      }
+    });
+    return items;
+  }, [content]);
 
   return (
     <Popover isBordered>
@@ -44,9 +69,13 @@ const TraversalButton = ({ type }: Props) => {
           px: "$10",
         }}
       >
-        <Text>
-          {content.length === 0 ? "Enter a node" : content.join("->")}
-        </Text>
+        {content.length === 0 ? (
+          <Text>Enter a node</Text>
+        ) : (
+          <Grid.Container alignItems="center">
+            {formatTraversal()}
+          </Grid.Container>
+        )}
       </Popover.Content>
     </Popover>
   );

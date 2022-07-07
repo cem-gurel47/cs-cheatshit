@@ -1,43 +1,32 @@
 import { EdgeData } from "reaflow";
-export class BTNode {
-  value: number;
-  left: BTNode | null;
-  right: BTNode | null;
-  parent: BTNode | null;
-  constructor(value: number, parent: BTNode | null) {
-    this.value = value;
-    this.left = null;
-    this.right = null;
-    this.parent = parent;
-  }
-}
+import { Node } from "./Node";
 
 export class BinarySearchTree {
-  root: BTNode | null;
+  root: Node | null;
 
   public constructor() {
     this.root = null;
   }
 
-  insertNode(root: BTNode | null, value: number): void {
+  insertNode(root: Node | null, value: number): void {
     if (root === null) {
       return;
     }
 
     if (value < root.value) {
       if (root.left === null || Number.isNaN(root.left?.value)) {
-        root.left = new BTNode(value, root);
+        root.left = new Node(value, root);
         if (root.right === null) {
-          root.right = new BTNode(Number.NaN, root);
+          root.right = new Node(Number.NaN, root);
         }
         return;
       }
       this.insertNode(root.left, value);
     } else if (value > root.value) {
       if (root.right === null || Number.isNaN(root.right?.value)) {
-        root.right = new BTNode(value, root);
+        root.right = new Node(value, root);
         if (root.left === null) {
-          root.left = new BTNode(Number.NaN, root);
+          root.left = new Node(Number.NaN, root);
         }
         return;
       }
@@ -47,13 +36,13 @@ export class BinarySearchTree {
 
   insert(value: number): void {
     if (this.root === null) {
-      this.root = new BTNode(value, null);
+      this.root = new Node(value, null);
       return;
     }
     this.insertNode(this.root, value);
   }
 
-  removeNode(root: BTNode | null, value: number): BTNode | null {
+  removeNode(root: Node | null, value: number): Node | null {
     if (root === null) {
       return null;
     }
@@ -66,7 +55,7 @@ export class BinarySearchTree {
       return root;
     } else {
       if (root.left === null && root.right === null) {
-        root = new BTNode(Number.NaN, root.parent);
+        root = new Node(Number.NaN, root.parent);
         return root;
       }
       if (
@@ -104,7 +93,7 @@ export class BinarySearchTree {
     this.root = this.removeNode(this.root, value);
   }
 
-  findMin(root: BTNode | null): BTNode | null {
+  findMin(root: Node | null): Node | null {
     if (root === null) {
       return root;
     }
@@ -114,7 +103,7 @@ export class BinarySearchTree {
     return this.findMin(root.left);
   }
 
-  findMax(root: BTNode | null): BTNode | null {
+  findMax(root: Node | null): Node | null {
     if (root === null) {
       return root;
     }
@@ -124,7 +113,7 @@ export class BinarySearchTree {
     return this.findMax(root.right);
   }
 
-  find(root: BTNode | null, value: number): BTNode | null {
+  find(root: Node | null, value: number): Node | null {
     if (root === null) {
       return root;
     }
@@ -137,7 +126,7 @@ export class BinarySearchTree {
     return this.find(root.right, value);
   }
 
-  nodesUntilFound(root: BTNode | null, value: number): number[] {
+  nodesUntilFound(root: Node | null, value: number): number[] {
     if (root === null) {
       return [];
     }
@@ -145,12 +134,12 @@ export class BinarySearchTree {
       return [root.value];
     }
     if (value < root.value) {
-      return [ root.value,...this.nodesUntilFound(root.left, value)];
+      return [root.value, ...this.nodesUntilFound(root.left, value)];
     }
-    return [root.value,...this.nodesUntilFound(root.right, value)];
+    return [root.value, ...this.nodesUntilFound(root.right, value)];
   }
 
-  preorder(root: BTNode | null): number[] {
+  preorder(root: Node | null): number[] {
     if (root === null) {
       return [];
     }
@@ -159,7 +148,7 @@ export class BinarySearchTree {
     return [root.value, ...left, ...right].filter((v) => !Number.isNaN(v));
   }
 
-  inorder(root: BTNode | null): number[] {
+  inorder(root: Node | null): number[] {
     if (root === null) {
       return [];
     }
@@ -168,7 +157,7 @@ export class BinarySearchTree {
     return [...left, root.value, ...right].filter((v) => !Number.isNaN(v));
   }
 
-  postorder(root: BTNode | null): number[] {
+  postorder(root: Node | null): number[] {
     if (root === null) {
       return [];
     }
@@ -177,7 +166,7 @@ export class BinarySearchTree {
     return [...left, ...right, root.value].filter((v) => !Number.isNaN(v));
   }
 
-  calculateDepth(root: BTNode | null): number {
+  calculateDepth(root: Node | null): number {
     if (root === null) {
       return 0;
     }
@@ -189,7 +178,7 @@ export class BinarySearchTree {
     return depth;
   }
 
-  calculateItemDepth(root: BTNode | null, value: number): number {
+  calculateItemDepth(root: Node | null, value: number): number {
     if (root === null) {
       return 0;
     }
@@ -203,9 +192,9 @@ export class BinarySearchTree {
   }
 
   returnTreeItemsByLevelWithEmptyNodes(
-    root: BTNode | null,
+    root: Node | null,
     level: number
-  ): BTNode[] {
+  ): Node[] {
     const numberOfItemsPerLevel = new Array(Math.pow(2, level - 1)).fill(
       Number.NaN
     );
@@ -227,7 +216,7 @@ export class BinarySearchTree {
     return left.concat(right);
   }
 
-  returnNodeArray(root: BTNode | null): { id: string; text: string }[] {
+  returnNodeArray(root: Node | null): { id: string; text: string }[] {
     // the array should have the following structure:
     // [{id: Node value, text : Node Value}]
 
@@ -248,7 +237,7 @@ export class BinarySearchTree {
     ].concat(left, right);
   }
 
-  returnEdgeArray(root: BTNode | null): EdgeData[] {
+  returnEdgeArray(root: Node | null): EdgeData[] {
     // the array should have the following structure:
     // [{from: Node value, to: Node Value}]
 

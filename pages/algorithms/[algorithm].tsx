@@ -31,7 +31,10 @@ const Algorithm = (props: Props) => {
         <title>{`${
           algorithm || ""
         } | CheatShit - Computer Science made easy`}</title>
-        <meta name="description" content="Visualize how ${algorithm} works." />
+        <meta
+          name="description"
+          content={`Visualize how ${algorithm} works.`}
+        />
       </Head>
       <Grid
         css={{
@@ -47,11 +50,7 @@ const Algorithm = (props: Props) => {
         >
           {convertPathToTitle(algorithm)}
         </Text>
-        <AlgorithmCard
-          code={`function test(){
-            console.log("Hello World");
-          }`}
-        />
+        <AlgorithmCard algorithm={algorithm} />
       </Grid>
     </Grid.Container>
   );

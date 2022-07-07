@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import { BSTContext } from "@contexts/BST";
+import { TreeContext } from "@contexts/tree";
 import { Grid } from "@nextui-org/react";
 import { useMeasure } from "react-use";
 import TreeCanvas from "./Tree/TreeCanvas";
@@ -11,19 +11,23 @@ import AddNodeButton from "./Tree/AddNodeButton";
 
 const TRAVERSALS = ["Preorder", "Inorder", "Postorder"];
 
-const AlgorithmVisual = () => {
+interface TreeProps {
+  algorithm: string | string[] | undefined;
+}
+
+const AlgorithmVisual = ({ algorithm }: TreeProps) => {
   const [ref, { width, height }] = useMeasure();
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState<string | undefined>();
   const {
-    BST,
+    tree,
     setInorderTraversal,
     setPreorderTraversal,
     setPostorderTraversal,
     setNodes,
     setEdges,
     setSearchList,
-  } = useContext(BSTContext);
+  } = useContext(TreeContext);
 
   useEffect(() => {
     if (inputRef.current) {
@@ -32,26 +36,26 @@ const AlgorithmVisual = () => {
   }, []);
 
   const addNode = () => {
-    const valueDoesNotExist = !BST.current.find(
-      BST.current.root,
+    const valueDoesNotExist = !tree.current.find(
+      tree.current.root,
       Number(value)
     );
     if (value && valueDoesNotExist) {
-      BST.current.insert(Number(value));
-      setInorderTraversal(BST.current.inorder(BST.current.root));
-      setPreorderTraversal(BST.current.preorder(BST.current.root));
-      setPostorderTraversal(BST.current.postorder(BST.current.root));
+      tree.current.insert(Number(value));
+      setInorderTraversal(tree.current.inorder(tree.current.root));
+      setPreorderTraversal(tree.current.preorder(tree.current.root));
+      setPostorderTraversal(tree.current.postorder(tree.current.root));
       setValue("");
-      setNodes(BST.current.returnNodeArray(BST.current.root));
-      setEdges(BST.current.returnEdgeArray(BST.current.root));
+      setNodes(tree.current.returnNodeArray(tree.current.root));
+      setEdges(tree.current.returnEdgeArray(tree.current.root));
       inputRef.current?.focus();
       setSearchList([]);
     }
   };
 
   const startSearching = () => {
-    const valueDoesNotExist = !BST.current.find(
-      BST.current.root,
+    const valueDoesNotExist = !tree.current.find(
+      tree.current.root,
       Number(value)
     );
     if (value && valueDoesNotExist) {
@@ -61,8 +65,8 @@ const AlgorithmVisual = () => {
     }
 
     if (value) {
-      const searchList = BST.current.nodesUntilFound(
-        BST.current.root,
+      const searchList = tree.current.nodesUntilFound(
+        tree.current.root,
         Number(value)
       );
       setSearchList(searchList);
