@@ -30,6 +30,7 @@ const TraversalButton = ({ type }: Props) => {
       if (index !== content.length - 1) {
         items.push(
           <ArrowRight
+            key={`${item}-arrow`}
             set="bold"
             primaryColor="blueviolet"
             style={{

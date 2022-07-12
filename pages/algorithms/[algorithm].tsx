@@ -6,21 +6,21 @@ import AlgorithmCard from "@components/Card/algorithm";
 
 type Props = {};
 
+const convertPathToTitle = (path: string | string[] | undefined) => {
+  if (typeof path === "string") {
+    const keywords = path.split("-");
+    const title = keywords
+      .map((keyword) => keyword.charAt(0).toUpperCase() + keyword.slice(1))
+      .join(" ");
+    return title;
+  }
+  return "";
+};
+
 const Algorithm = (props: Props) => {
   const router = useRouter();
-
   const { algorithm } = router.query;
 
-  const convertPathToTitle = (path: string | string[] | undefined) => {
-    if (typeof path === "string") {
-      const keywords = path.split("-");
-      const title = keywords
-        .map((keyword) => keyword.charAt(0).toUpperCase() + keyword.slice(1))
-        .join(" ");
-      return title;
-    }
-    return "";
-  };
   return (
     <Grid.Container
       css={{
@@ -29,7 +29,7 @@ const Algorithm = (props: Props) => {
     >
       <Head>
         <title>{`${
-          algorithm || ""
+          convertPathToTitle(algorithm) || ""
         } | CheatShit - Computer Science made easy`}</title>
         <meta
           name="description"

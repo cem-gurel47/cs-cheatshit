@@ -45,10 +45,10 @@ const AlgorithmVisual = ({ algorithm }: TreeProps) => {
       setInorderTraversal(tree.current.inorder(tree.current.root));
       setPreorderTraversal(tree.current.preorder(tree.current.root));
       setPostorderTraversal(tree.current.postorder(tree.current.root));
-      setValue("");
       setNodes(tree.current.returnNodeArray(tree.current.root));
       setEdges(tree.current.returnEdgeArray(tree.current.root));
       inputRef.current?.focus();
+      setValue("");
       setSearchList([]);
     }
   };

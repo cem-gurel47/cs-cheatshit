@@ -1,147 +1,132 @@
 import { Node } from "./Node";
 import { EdgeData } from "reaflow";
 
+// TODO write tests for this class
 export class AVLTree {
   root: Node | null;
   constructor() {
     this.root = null;
   }
 
-  insert(value: number): void {
-    const newNode = new Node(value, null);
-    if (this.root === null) {
-      this.root = newNode;
-      return;
-    }
-
-    let currentNode = this.root;
-    while (true) {
-      if (value < currentNode.value) {
-        if (currentNode.left === null) {
-          currentNode.left = newNode;
-          newNode.parent = currentNode;
-          this.balance(newNode);
-          return;
-        }
-        currentNode = currentNode.left;
-      } else if (value > currentNode.value) {
-        if (currentNode.right === null) {
-          currentNode.right = newNode;
-          newNode.parent = currentNode;
-          this.balance(newNode);
-          return;
-        }
-        currentNode = currentNode.right;
-      } else {
-        return;
-      }
-    }
-  }
-
-  balance(node: Node): void {
-    alert("balance");
-    if (node.parent === null) {
-      return;
-    }
-
-    const parent = node.parent;
-    const grandparent = parent.parent;
-
-    if (grandparent === null) {
-      return;
-    }
-
-    if (parent.left === node) {
-      if (grandparent.left === parent) {
-        this.rotateRight(parent);
-      } else {
-        this.rotateLeft(parent);
-      }
-    } else {
-      if (grandparent.left === parent) {
-        this.rotateLeft(parent);
-      } else {
-        this.rotateRight(parent);
-      }
-    }
-
-    this.balance(grandparent);
-  }
-
-  rotateLeft(node: Node): void {
-    const right = node.right;
-
-    if (right === null) {
-      return;
-    }
-
-    node.right = right.left;
-    if (right.left !== null) {
-      right.left.parent = node;
-    }
-    right.parent = node.parent;
-    if (node.parent === null) {
-      this.root = right;
-    } else if (node.parent.left === node) {
-      node.parent.left = right;
-    } else {
-      node.parent.right = right;
-    }
-    right.left = node;
-    node.parent = right;
-  }
-
-  rotateRight(node: Node): void {
-    const left = node.left;
-
-    if (left === null) {
-      return;
-    }
-
-    node.left = left.right;
-    if (left.right !== null) {
-      left.right.parent = node;
-    }
-    left.parent = node.parent;
-    if (node.parent === null) {
-      this.root = left;
-    } else if (node.parent.left === node) {
-      node.parent.left = left;
-    } else {
-      node.parent.right = left;
-    }
-    left.right = node;
-    node.parent = left;
-  }
-
-  removeNode(root: Node | null, value: number): Node | null {
+  insertNode(root: Node | null, value: number): void {
     if (root === null) {
-      return null;
+      return;
     }
 
     if (value < root.value) {
-      root.left = this.removeNode(root.left, value);
-    } else if (value > root.value) {
-      root.right = this.removeNode(root.right, value);
-    } else {
-      if (root.left === null && root.right === null) {
-        return null;
-      } else if (root.left === null) {
-        return root.right;
-      } else if (root.right === null) {
-        return root.left;
-      } else {
-        const min = this.findMin(root.right);
-        root.value = min.value;
-        root.right = this.removeNode(root.right, min.value);
+      // console.log(value, "is less than", root.value);
+      if (root.left === null || Number.isNaN(root.left?.value)) {
+        root.left = new Node(value, root);
+        // console.log("left node is", value);
+        if (root.right === null) {
+          // console.log("right node is NaN");
+          root.right = new Node(Number.NaN, root);
+        }
+        this.balance(root);
+        return;
       }
+      this.insertNode(root.left, value);
+    } else if (value > root.value) {
+      // console.log(value, "is greater than", root.value);
+      if (root.right === null || Number.isNaN(root.right?.value)) {
+        root.right = new Node(value, root);
+        //console.log("right node is", value);
+        if (root.left === null) {
+          //console.log("left node is NaN");
+          root.left = new Node(Number.NaN, root);
+        }
+        this.balance(root);
+        return;
+      }
+      this.insertNode(root.right, value);
     }
-
-    return root;
   }
 
-  remove(value: number): void {
-    this.root = this.removeNode(this.root, value);
+  balance(lastInsertedNodeParent: Node): void {
+    // find the first unbalanced node
+    let unbalancedNode = lastInsertedNodeParent;
+    while (unbalancedNode.parent !== null) {
+      unbalancedNode = unbalancedNode.parent;
+      // console.log(unbalancedNode, unbalancedNode.left, unbalancedNode.right);
+      let left = this.height(unbalancedNode.left);
+      let right = this.height(unbalancedNode.right);
+
+      if (Math.abs(left - right) > 1) {
+        this.rotate(unbalancedNode);
+      }
+    }
+  }
+
+  height(root: Node | null): number {
+    if (root === null || Number.isNaN(root.value)) {
+      return 0;
+    }
+    return 1 + Math.max(this.height(root.left), this.height(root.right));
+  }
+
+  rotate(root: Node | null): void {
+    // console.log(root, "rotate root");
+    if (root === null) {
+      return;
+    }
+    const left = this.height(root.left);
+    const right = this.height(root.right);
+
+    if (left < right) {
+      // console.log(`rotate left ${left} ${right}`);
+      this.rotateLeft(root);
+    } else {
+      // console.log(`rotate right ${left} ${right}`);
+      this.rotateRight(root);
+    }
+  }
+
+  rotateLeft(root: Node | null): void {
+    if (root === null) {
+      return;
+    }
+    // console.log("left rotation", root);
+    const newParent = root.right;
+    if (newParent === null) {
+      return;
+    }
+    newParent.parent = root.parent;
+    if (root.parent === null) {
+      this.root = newParent;
+    } else {
+      root.parent.right = newParent;
+    }
+    root.parent = newParent;
+    root.right = newParent.left;
+    newParent.left = root;
+  }
+
+  rotateRight(root: Node | null): void {
+    if (root === null) {
+      return;
+    }
+    console.log("right rotation", root);
+    const newParent = root.left;
+    if (newParent === null) {
+      return;
+    }
+    newParent.parent = root.parent;
+    if (root.parent === null) {
+      this.root = newParent;
+    } else {
+      root.parent.left = newParent;
+    }
+    root.parent = newParent;
+    root.left = newParent.right;
+    newParent.right = root;
+  }
+
+  insert(number: number): void {
+    if (this.root === null) {
+      this.root = new Node(number, null);
+      return;
+    }
+    this.insertNode(this.root, number);
   }
 
   findMin(root: Node | null): Node {
@@ -173,13 +158,13 @@ export class AVLTree {
       return null;
     }
 
-    if (value < root.value) {
-      return this.find(root.left, value);
-    } else if (value > root.value) {
-      return this.find(root.right, value);
-    } else {
+    if (root.value === value) {
       return root;
     }
+    if (value < root.value) {
+      return this.find(root.left, value);
+    }
+    return this.find(root.right, value);
   }
 
   findNode(root: Node | null, value: number): Node | null {
@@ -230,12 +215,16 @@ export class AVLTree {
 
     const left = this.returnNodeArray(root.left);
     const right = this.returnNodeArray(root.right);
+    const value = Number.isNaN(root.value)
+      ? `NaN-${root.parent?.value}`
+      : root.value.toString();
 
     return [
-      ...left,
-      { id: root.value.toString(), text: root.value.toString() },
-      ...right,
-    ];
+      {
+        id: value,
+        text: value,
+      },
+    ].concat(left, right);
   }
 
   nodesUntilFound(root: Node | null, value: number): number[] {
